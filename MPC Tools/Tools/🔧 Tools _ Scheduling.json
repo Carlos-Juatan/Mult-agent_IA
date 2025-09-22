@@ -1,0 +1,957 @@
+{
+  "name": "🔧 Tools | Scheduling",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "type"
+            },
+            {
+              "name": "data",
+              "type": "object"
+            },
+            {
+              "name": "memory"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "b53187fc-286b-41fa-b5c9-21aec447dd01",
+      "name": "exec"
+    },
+    {
+      "parameters": {
+        "content": "## ➡️ INICIANDO E PREPARANDO VALORES\n\nFluxo Preparação de Valores: executa um gatilho inicial, define os dados da agenda e determina a rota apropriada com base em regras para direcionar aos fluxos de buscar, marcar ou cancelar consultas.",
+        "height": 420,
+        "width": 708,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -304,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "19394438-8d96-4edd-ad0d-ccaac6adaf4d",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "\n{\n  \"timezone\": \"America/Sao_Paulo\",\n  \"timeBetweenMeetingsMinutes \": 60,\n  \"schedule\": [\n    {\n      \"day\": \"SEG\",\n      \"available\": true,\n      \"hours\": { \"after\": \"06:00\", \"before\": \"17:00\" }\n    },\n    {\n      \"day\": \"TER\",\n      \"available\": true,\n      \"hours\": { \"after\": \"06:00\", \"before\": \"17:00\" }\n    },\n    {\n      \"day\": \"QUA\",\n      \"available\": true,\n      \"hours\": { \"after\": \"06:00\", \"before\": \"17:00\" }\n    },\n    {\n      \"day\": \"QUI\",\n      \"available\": true,\n      \"hours\": { \"after\": \"06:00\", \"before\": \"17:00\" }\n    },\n    {\n      \"day\": \"SEX\",\n      \"available\": true,\n      \"hours\": { \"after\": \"06:00\", \"before\": \"17:00\" }\n    },\n    {\n      \"day\": \"SAB\",\n      \"available\": false,\n      \"hours\": { \"after\": \"\", \"before\": \"\" }\n    },\n    {\n      \"day\": \"DOM\",\n      \"available\": false,\n      \"hours\": { \"after\": \"\", \"before\": \"\" }\n    }\n  ]\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "96d96034-75f5-487b-84e9-a677145ecf3e",
+      "name": "setAgenda"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('exec').first().json.type }}",
+                    "rightValue": "getDates",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9457dbb6-f896-4ffd-bd0f-012ddbc0b915"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "getDates"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2d69e72a-af68-41fd-89e8-ccbe26ee3603",
+                    "leftValue": "={{ $('exec').first().json.type }}",
+                    "rightValue": "scheduleAppointment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "scheduleAppointment"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "af9462ca-187c-4f7a-801e-1fd29a9958ca",
+                    "leftValue": "={{ $('exec').first().json.type }}",
+                    "rightValue": "cancelAppointment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelAppointment"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        128,
+        -16
+      ],
+      "id": "3a0552cc-ccdb-47b8-85f4-5a91b29d12d0",
+      "name": "setRoute"
+    },
+    {
+      "parameters": {
+        "content": "## 🕜 BUSCAR HORÁRIOS\n\nFluxo Buscar Horários: obtém eventos do Google Calendar, junta com disponibilidade definida, divide itens, filtra horários da semana e junta tudo em uma lista final de horários disponíveis.",
+        "height": 352,
+        "width": 1424,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        -592
+      ],
+      "typeVersion": 1,
+      "id": "363be8cc-8d16-443d-a7f9-5d4fe0b93d15",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "a5fae06f9ba59a8aba40617c77a32e63c57ff050326e885e4a232f2047223f3e@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "surfClasses"
+        },
+        "returnAll": true,
+        "timeMax": "={{ $now.plus({ week: 4 }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        496,
+        -432
+      ],
+      "id": "f52c2114-5465-4542-8263-b6eccb2aeb2c",
+      "name": "getEvents",
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "HchBzb0Y2ANPQzvJ",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -432
+      ],
+      "id": "9a07a367-6942-4643-95cb-0b226c4cac4a",
+      "name": "mergeEvents"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a366af35-ca99-40ab-bd55-e9304e117f80",
+              "name": "data",
+              "value": "={{\n\n(() => {\n  const scheduledEvents = $json.data;\n  const weeklyAvailability = $('setAgenda').first().json;\n\n  const weeksInterval = 4;\n  const minutesInterval = $('setAgenda').first().json['timeBetweenMeetingsMinutes ']; // Cuidado com o espaço no final!\n\n  const dayMap = {\n    0: \"DOM\", 1: \"SEG\", 2: \"TER\", 3: \"QUA\", 4: \"QUI\", 5: \"SEX\", 6: \"SAB\"\n  };\n\n  function getDateWithTime(date, timeStr) {\n    if (!timeStr) return null;\n    const [hour, minute] = timeStr.split(\":\").map(Number);\n    const newDate = new Date(date);\n    newDate.setHours(hour, minute, 0, 0);\n    return newDate;\n  }\n\n  function formatTime(date) {\n    const hours = date.getHours().toString().padStart(2, '0');\n    const minutes = date.getMinutes().toString().padStart(2, '0');\n    return `${hours}:${minutes}`;\n  }\n\n  function areSameDay(date1, date2) {\n    return (\n      date1.getFullYear() === date2.getFullYear() &&\n      date1.getMonth() === date2.getMonth() &&\n      date1.getDate() === date2.getDate()\n    );\n  }\n\n  function generateAvailableTimes() {\n    const availableTimes = [];\n    const today = new Date();\n\n    // Verifica se existem eventos válidos\n    const validEvents = Array.isArray(scheduledEvents)\n      ? scheduledEvents.filter(e => e?.start?.dateTime && e?.end?.dateTime)\n      : [];\n\n    for (let i = 0; i < weeksInterval * 7; i++) {\n      const currentDate = new Date(today);\n      currentDate.setDate(today.getDate() + i);\n      currentDate.setHours(0, 0, 0, 0);\n\n      const dayOfWeek = dayMap[currentDate.getDay()];\n      const dayConfig = weeklyAvailability.schedule.find(d => d.day === dayOfWeek);\n\n      if (!dayConfig || !dayConfig.available) continue;\n\n      const windowStart = getDateWithTime(currentDate, dayConfig.hours.after);\n      const windowEnd = getDateWithTime(currentDate, dayConfig.hours.before);\n      if (!windowStart || !windowEnd) continue;\n\n      const dailyEvents = validEvents.filter(event => {\n        const eventStart = new Date(event.start.dateTime);\n        return areSameDay(eventStart, currentDate);\n      });\n\n      for (let slotStart = new Date(windowStart); slotStart < windowEnd;) {\n        const slotEnd = new Date(slotStart.getTime() + minutesInterval * 60000);\n        if (slotEnd > windowEnd) break;\n\n        let hasConflict = false;\n        if (validEvents.length > 0) {\n          hasConflict = dailyEvents.some(event => {\n            const eventStart = new Date(event.start.dateTime);\n            const eventEnd = new Date(event.end.dateTime);\n            return (slotStart < eventEnd && slotEnd > eventStart);\n          });\n        }\n\n        if (!hasConflict) {\n          availableTimes.push({\n            date: slotStart.toISOString().split(\"T\")[0],\n            start: formatTime(slotStart),\n            end: formatTime(slotEnd)\n          });\n        }\n\n        slotStart = new Date(slotEnd);\n      }\n    }\n\n    return availableTimes;\n  }\n\n  try {\n    const result = generateAvailableTimes();\n    return JSON.stringify(result);\n  } catch (error) {\n    return JSON.stringify({ error: error.message, stack: error.stack });\n  }\n\n})()\n\n}}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        880,
+        -432
+      ],
+      "id": "7119957b-5d9a-4ea6-825a-1487b9c7f720",
+      "name": "setAvailability",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        -432
+      ],
+      "id": "4c154498-814a-4e1b-900f-bbb161219f4f",
+      "name": "splitItems"
+    },
+    {
+      "parameters": {
+        "maxItems": 55
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        -432
+      ],
+      "id": "d12f0ca9-4b1e-48ef-8261-d94d76921588",
+      "name": "getWeekdayAvailability"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1456,
+        -432
+      ],
+      "id": "f710f064-3bac-4b09-9bac-df8148c48184",
+      "name": "mergeWeekSchedule"
+    },
+    {
+      "parameters": {
+        "content": "## ✨ MARCAR AGENDAMENTO\n\nFluxo Marcar Consulta: agenda evento no Google Calendar, verifica se foi criado com sucesso, armazena o agendamento e responde com sucesso ou falha conforme o resultado.",
+        "height": 424,
+        "width": 1424,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "eb2758b8-8138-43b0-bc63-bcdde03dd1e5",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "a5fae06f9ba59a8aba40617c77a32e63c57ff050326e885e4a232f2047223f3e@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "surfClasses"
+        },
+        "start": "={{ new Date($('configTimezone').first().json.correctDate) }}",
+        "end": "={{ new Date($('configTimezone').first().json.correctDate).plus($('setAgenda').first().json['timeBetweenMeetingsMinutes '], 'minute') }}",
+        "additionalFields": {
+          "attendees": [],
+          "description": "=Nome: {{ $('exec').item.json.data.name }}\nE-mail: {{ $('exec').item.json.data.email }}\nNúmero: {{ $('exec').item.json.data.number }}",
+          "summary": "=Aula de surf"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        0
+      ],
+      "id": "0a2b51c1-39fb-4eca-a6c3-2f009210dbd1",
+      "name": "setEvent",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "HchBzb0Y2ANPQzvJ",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "e4e84f04-d193-4f10-9dd3-158f1436463c",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        976,
+        0
+      ],
+      "id": "5b26656e-5ec5-4223-946b-ecc5a29d0520",
+      "name": "checkCreation",
+      "alwaysOutputData": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## 🫧 CANCELAR AGENDAMENTO\n\nFluxo Cancelar Consulta: busca o agendamento no cache, remove o evento do Google Calendar, deleta o cache correspondente e responde com sucesso após o cancelamento.",
+        "height": 424,
+        "width": 1424,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        240
+      ],
+      "typeVersion": 1,
+      "id": "46ef6b61-c4f5-4348-be5b-1bf07ee7c79d",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "a5fae06f9ba59a8aba40617c77a32e63c57ff050326e885e4a232f2047223f3e@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "surfClasses"
+        },
+        "eventId": "={{ $json.schedule_data.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        800,
+        432
+      ],
+      "id": "b4e68924-017b-4369-8bc9-97a6d82c7362",
+      "name": "removeEvent",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "HchBzb0Y2ANPQzvJ",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e70e0c42-511b-47b4-8dd6-7150fa6c923e",
+              "name": "response",
+              "value": "aula marcada com sucesso!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1456,
+        -96
+      ],
+      "id": "750154f5-7a07-4b10-ad3d-9ef25a0de688",
+      "name": "replySuccess"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e70e0c42-511b-47b4-8dd6-7150fa6c923e",
+              "name": "response",
+              "value": "Falha ao marcar aula, escolha outro horário",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1456,
+        64
+      ],
+      "id": "2290f66c-c970-495a-82fa-1f80fcbbb7e4",
+      "name": "replyFailed"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e70e0c42-511b-47b4-8dd6-7150fa6c923e",
+              "name": "response",
+              "value": "aula cancelada com sucesso!",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1376,
+        432
+      ],
+      "id": "a70f368f-6e07-44dc-8e5f-37037a722094",
+      "name": "replySuccess_cancel"
+    },
+    {
+      "parameters": {
+        "jsCode": "const schedulingString = $('exec').first().json.data.scheduling + ':00-03:00';\nconst date = new Date(schedulingString);\n\n// O objeto \"date\" agora contém a data e hora corretas.\nreturn [{\n  json: {\n    correctDate: date\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        496,
+        0
+      ],
+      "id": "0a3a5f54-55f1-497f-9bb7-e3ca774d823d",
+      "name": "configTimezone"
+    },
+    {
+      "parameters": {
+        "tableId": "Debug",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "system_message",
+              "fieldValue": "Verificando horários"
+            },
+            {
+              "fieldId": "log",
+              "fieldValue": "=Lead checou a disponibilidade de horários."
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        -432
+      ],
+      "id": "011032c5-37fd-4b3e-bf5d-5886354cd8d5",
+      "name": "debugAvailability",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "Debug",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "system_message",
+              "fieldValue": "Marcação de Horários"
+            },
+            {
+              "fieldId": "log",
+              "fieldValue": "={{ $json.response }} para o lead {{ $('exec').item.json.data.name }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        0
+      ],
+      "id": "1cf63b0c-bddc-4faf-b23e-8de900de97be",
+      "name": "debugAppointment",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "Debug",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "system_message",
+              "fieldValue": "Cancelamento de Agendamento"
+            },
+            {
+              "fieldId": "log",
+              "fieldValue": "={{ $json.response }} para o lead {{ $('exec').item.json.data.name }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        432
+      ],
+      "id": "7425e99c-c187-4325-a067-8848860d795c",
+      "name": "debugCancel",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableId": "Scheduling",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "id",
+              "fieldValue": "={{ $('exec').item.json.memory }}"
+            },
+            {
+              "fieldId": "schedule_data",
+              "fieldValue": "={{ $('setEvent').all()[0].json }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1216,
+        -96
+      ],
+      "id": "55b5bece-20cf-4575-bcd8-3f111a375e74",
+      "name": "storeSchedule",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "Scheduling",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "keyValue": "={{ $('exec').item.json.memory }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        528,
+        432
+      ],
+      "id": "7cecc154-6a19-4732-9c51-9e97ec7fa43f",
+      "name": "getSchedule",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "Scheduling",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $('exec').item.json.memory }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1088,
+        432
+      ],
+      "id": "21cb2686-cdc2-4da8-96aa-27e8c36bc2bf",
+      "name": "deletaCache",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "exec": [
+      {
+        "json": {
+          "type": "cancelAppointment",
+          "data": {
+            "name": "carlos juatan",
+            "number": "992647973",
+            "email": "carlosjuatan@gmail.com",
+            "scheduling": "2025-09-03 13:00"
+          },
+          "memory": "test-n8n:0a86dc388bd74ad89b60a831c5ac33ff"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "exec": {
+      "main": [
+        [
+          {
+            "node": "setAgenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setAgenda": {
+      "main": [
+        [
+          {
+            "node": "setRoute",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setRoute": {
+      "main": [
+        [
+          {
+            "node": "getEvents",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "configTimezone",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "getSchedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getEvents": {
+      "main": [
+        [
+          {
+            "node": "mergeEvents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mergeEvents": {
+      "main": [
+        [
+          {
+            "node": "setAvailability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setAvailability": {
+      "main": [
+        [
+          {
+            "node": "splitItems",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "splitItems": {
+      "main": [
+        [
+          {
+            "node": "getWeekdayAvailability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getWeekdayAvailability": {
+      "main": [
+        [
+          {
+            "node": "mergeWeekSchedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setEvent": {
+      "main": [
+        [
+          {
+            "node": "checkCreation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "checkCreation": {
+      "main": [
+        [
+          {
+            "node": "storeSchedule",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "replyFailed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "removeEvent": {
+      "main": [
+        [
+          {
+            "node": "deletaCache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "configTimezone": {
+      "main": [
+        [
+          {
+            "node": "setEvent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "mergeWeekSchedule": {
+      "main": [
+        [
+          {
+            "node": "debugAvailability",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "replySuccess": {
+      "main": [
+        [
+          {
+            "node": "debugAppointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "replyFailed": {
+      "main": [
+        [
+          {
+            "node": "debugAppointment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "replySuccess_cancel": {
+      "main": [
+        [
+          {
+            "node": "debugCancel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "storeSchedule": {
+      "main": [
+        [
+          {
+            "node": "replySuccess",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getSchedule": {
+      "main": [
+        [
+          {
+            "node": "removeEvent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "deletaCache": {
+      "main": [
+        [
+          {
+            "node": "replySuccess_cancel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6b3a2f7b-7d95-4461-87ff-06e61f476fa0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "ziG62bXxAbRPOA1O",
+  "tags": [
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-15T18:20:47.241Z",
+      "updatedAt": "2025-08-15T18:20:47.241Z",
+      "id": "AMDUWvGTWEf9Q2Wz",
+      "name": "Tools"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

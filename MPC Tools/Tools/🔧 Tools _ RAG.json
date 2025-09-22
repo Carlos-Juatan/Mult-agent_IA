@@ -1,0 +1,696 @@
+{
+  "name": "🔧 Tools | RAG",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "function"
+            },
+            {
+              "name": "query"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -144,
+        176
+      ],
+      "id": "65161f4a-10f2-4c4a-b06f-e9c500fb2a73",
+      "name": "start"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.function }}",
+                    "rightValue": "new",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9d28ed23-f573-4930-ba2a-2cb33d131e9b"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "new"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ee131e71-ecc2-40dc-a041-181af6825eee",
+                    "leftValue": "={{ $json.function }}",
+                    "rightValue": "search",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "search"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        240,
+        16
+      ],
+      "id": "d6c83105-8086-4571-beaf-b45412bdab44",
+      "name": "Switch",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "content": "## ➡️ Iniciando e Preparando Valores\n\nFluxo Preparação de Valores: executa um gatilho inicial, define os dados e determina a rota apropriada com base em regras para direcionar aos fluxos de faq, termos ou serviços.",
+        "height": 516,
+        "width": 804,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -400,
+        -208
+      ],
+      "typeVersion": 1,
+      "id": "68623d16-5a4d-40b6-b0d7-6df60e1c6e00",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "78898662-85ef-44cb-a042-fb97893509a8",
+      "name": "chat",
+      "webhookId": "cd00eee1-ea58-4734-be0d-05f7448958cd",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        480,
+        368
+      ],
+      "id": "746b2ccb-2d76-41f0-b9eb-1c6cb13624ea",
+      "name": "model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ⚡ Banco de Dados Vetorial",
+        "height": 592,
+        "width": 448,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        432,
+        64
+      ],
+      "id": "8e8d5145-a166-45ff-83c5-0b14e4fa1b08",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        576,
+        528
+      ],
+      "id": "d4f388ce-62ee-46bc-8f90-ad08d80d86c7",
+      "name": "embeddings",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.rerankerCohere",
+      "typeVersion": 1,
+      "position": [
+        688,
+        528
+      ],
+      "id": "1434093a-2759-4e27-b6fa-10b660283344",
+      "name": "reranker",
+      "credentials": {
+        "cohereApi": {
+          "id": "w8LZLcKQFNE0NCYD",
+          "name": "CohereApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Merge').item.json.query }}",
+        "options": {
+          "systemMessage": "Use o `RAG Vector` que é um banco de dador vetor do postgres com pgvector para responder as perguntas sobre termos e serviços ou faq da loja física e online e das aulas de surf, essa é sua base de conhecimento."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        496,
+        144
+      ],
+      "id": "2d643a09-6a9e-4973-9c30-de10f8535168",
+      "name": "RAG Agent"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        48,
+        16
+      ],
+      "id": "6f3c29f0-73d4-4518-9260-d0c76dcb393d",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e006a6e3-0f2d-4f2e-a274-6215c7475906",
+              "name": "function",
+              "value": "search",
+              "type": "string"
+            },
+            {
+              "id": "ee09a036-2db0-4f8f-a7b6-4688dcb14ca8",
+              "name": "query",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -144,
+        0
+      ],
+      "id": "10f29a40-2bb8-4252-b89d-4c8b336ecd77",
+      "name": "setVariables",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "content": "### ---------> PARA TESTES <---------",
+        "height": 192,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        -48
+      ],
+      "id": "1c5d5089-1086-4c5c-8579-398755a8ab4f",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## 🧩 Registrando Novas FAQs",
+        "height": 436,
+        "width": 788,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        -400
+      ],
+      "typeVersion": 1,
+      "id": "f0e1d819-732c-4238-ada8-855dd854a8db",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "506118ea-fca5-4f10-a80f-edc9d2f7272f",
+              "name": "query",
+              "value": "={{ $json.query }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        496,
+        -320
+      ],
+      "id": "808dfbe3-e624-4c8c-ba82-5ca04c9a6687",
+      "name": "userQuery",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=Você é um assistente que analiza a pergunta do usuário para gerar uma resposta que será salva no banco de dados do FAQ.\n\nvocê irá analizar a `query` e gerar uma resposta para ela. Essa resposta deve estar dentro do contexto de uma loja física e online para produtos de praia e surf e roupas como também para o contexto de aulas de surf com os professores da empresa.\n\nVocê usará a tool `registerFAQ` para realziar o registro da nova FAQ gerada.\n\noutput:\n# exemplo\n{\n  \"sistem_info\": \"Registro da nova FAQ realizado com sucesso!\"\n  \"quest\": \"Onde fica o local?\",\n  \"awnser\": \"A loja física e o local das aulas se localiza na rua Dos Bobos, N° 0\",\n  \"context\": \"Loja Física\"\n}\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        -320
+      ],
+      "id": "28dcea6c-1d38-4a6d-b271-768d94c49a11",
+      "name": "RAG Register"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        624,
+        -96
+      ],
+      "id": "f7416483-05ab-4bc8-99cf-9378722571d6",
+      "name": "model_",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 📋 Notas Para Melhoria\n\n 1. ",
+        "height": 468,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        912,
+        64
+      ],
+      "typeVersion": 1,
+      "id": "927860d9-06d8-49d8-a4ef-18916ab8a424",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "tableId": "Debug",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "system_message",
+              "fieldValue": "Nova FAQ Para Analize"
+            },
+            {
+              "fieldId": "log",
+              "fieldValue": "={{ $json.sistem_info }}\nFAQ Resgistrada: \npergunta: {{ $json.quest }}\nresposta: {{ $json.awnser }}\ncontexto: {{ $json.context }}\ndata de criação: {{ $today }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -112
+      ],
+      "id": "5fc83045-a693-4f3c-bf95-914d979af6ec",
+      "name": "logRegister",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use essa ferramenta para registrar no banco de dados a nova FAQ, \n\nPara o `context` use somente \"Aulas de Surf\", \"Loja Física\" e \"Loja Online\". Restrinja-se somente ao uso de \"Aulas de Surf\", \"Loja Física\" e \"Loja Online\". \n\nUse o case (\"Aulas de Surf\"):\n\nmodelo de entrada:\n# exemplo\n{\n  \"quest\": \"Onde fica o local?\",\n  \"awnser\": \"A loja física e o local das aulas se localiza na rua Dos Bobos, N° 0\",\n  \"context\": \"Loja Física\"\n}",
+        "tableId": "FAQs",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "pergunta",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues0_Field_Value', `Uma pergunta mais estruturada e organizada com base na query do usuário.`, 'string') }}"
+            },
+            {
+              "fieldId": "resposta",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues1_Field_Value', `Resposta a query gerada pelo agente.`, 'string') }}"
+            },
+            {
+              "fieldId": "contexto",
+              "fieldValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('fieldValues2_Field_Value', `Contexto gerado pelo agente com base no contexto da query.\n\nRestrinja-se somente ao uso de \"Aulas de Surf\", \"Loja Física\" e \"Loja Online\". `, 'string') }}"
+            },
+            {
+              "fieldId": "etapa",
+              "fieldValue": "Analize"
+            },
+            {
+              "fieldId": "add",
+              "fieldValue": "false"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        832,
+        -96
+      ],
+      "id": "390ed76e-b2cf-4c37-8326-bca746eba742",
+      "name": "registerFAQ",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use essa tool para recuperar informações sobre perguntas sobre termos, serviços ou faq da loja física e online ou das aulas de surf.",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_rag_vector",
+          "mode": "list",
+          "cachedResultName": "documents_rag_vector"
+        },
+        "topK": 20,
+        "useReranker": true,
+        "options": {
+          "queryName": "match_documents_rag"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        368
+      ],
+      "id": "df9a6a67-1241-42e2-b22b-94a2694d9d19",
+      "name": "RAG Vector",
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const outputItem = $input.first().json.output;\nconst jsonString = outputItem.replace(/```json\\n|\\n```/g, '');\nconst cleanedJson = JSON.parse(jsonString);\n\nreturn cleanedJson;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        -320
+      ],
+      "id": "e188ccbb-be9c-402d-82f4-fffcfa34639f",
+      "name": "structure"
+    }
+  ],
+  "pinData": {
+    "start": [
+      {
+        "json": {
+          "function": "search",
+          "query": "Vocês tem equipamento para aulas?"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "userQuery",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "RAG Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "chat": {
+      "main": [
+        [
+          {
+            "node": "setVariables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "RAG Vector",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reranker": {
+      "ai_reranker": [
+        [
+          {
+            "node": "RAG Vector",
+            "type": "ai_reranker",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "setVariables": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "userQuery": {
+      "main": [
+        [
+          {
+            "node": "RAG Register",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model_": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG Register",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Register": {
+      "main": [
+        [
+          {
+            "node": "structure",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Agent": {
+      "main": [
+        []
+      ]
+    },
+    "registerFAQ": {
+      "ai_tool": [
+        [
+          {
+            "node": "RAG Register",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Vector": {
+      "ai_tool": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "structure": {
+      "main": [
+        [
+          {
+            "node": "logRegister",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2eccd8bd-29ea-42cb-b5bf-46fa9769bc1f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "teYni0RhlCFzLRXB",
+  "tags": [
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-15T18:20:47.241Z",
+      "updatedAt": "2025-08-15T18:20:47.241Z",
+      "id": "AMDUWvGTWEf9Q2Wz",
+      "name": "Tools"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

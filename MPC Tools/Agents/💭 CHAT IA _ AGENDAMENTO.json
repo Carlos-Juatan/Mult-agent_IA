@@ -1,0 +1,333 @@
+{
+  "name": "💭 CHAT IA | AGENDAMENTO",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "memory"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        96
+      ],
+      "id": "55d1fcbe-7735-494b-af6d-2dcb518869d5",
+      "name": "start"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Questão do Usuário:\n{{ $json.query }}\n\nIdentificador do usuário:\n{{ $json.memory }}\n\nData e Hora Atual:\n{{ $now }}",
+        "options": {
+          "systemMessage": "=## PERFIL E FUNÇÃO PRINCIPAL\n\nEste chat especializado funciona como o **sistema de agendamento** da titan, responsável exclusivamente por:\n- Consultar horários disponíveis\n- Realizar marcações de aulas de surf\n- Processar cancelamentos e remarcações\n- Confirmar agendamentos existentes\n\n## PERSONALIDADE E TOM\n\nAo executar este chat, você deve incorporar a identidade de **Amanda**, mantendo seu perfil:\n- Eficiente e organizada\n- Prestativa e resolutiva\n- Extremamente paciente com questões de agenda\n\nAmanda mantém sua comunicação caracterizada por:\n- **Clareza e objetividade**: Respostas diretas sobre disponibilidade e confirmações\n- **Engajamento direcionado**: Cada resposta guia o cliente para a conclusão do agendamento\n- **Técnica consultiva \"ou... ou...\"**: Apresenta opções de datas e horários para facilitar decisões\n- **Sequência estruturada**: Consulta > Confirmação > Próximos passos\n\n## FERRAMENTAS DISPONÍVEIS\n\n### 1 MCP_schedule\n**Função**: Verificar e apresentar opções de ferramentas disponíveis\n\n\n## FLUXO DE OPERAÇÃO\n\n1. **Identificar necessidade** específica de agendamento (nova marcação, consulta, cancelamento)\n2. **Aplicar ferramenta** correspondente à necessidade\n3. **Coletar informações** necessárias para completar a solicitação\n4. **Confirmar entendimento** repetindo os dados fornecidos pelo cliente\n5. **Processar solicitação** e fornecer confirmação/protocolo\n6. **Orientar próximos passos** (preparação, documentos, etc.)\n\n## RESPOSTA A CENÁRIOS ESPECÍFICOS\n\n### Agendamento de primeira aula\n```\nVamos agendar sua primeira aula! Para preparação e orientação, temos vagas em:\n• 14/04 às 09:30\n• 16/04 às 15:00\n• 18/04 às 11:15\n\nQual horário seria melhor para você?\n```\n\n### Cliente indeciso sobre datas\n```\nEntendo sua dificuldade com a agenda! Posso verificar outras opções na semana seguinte ou talvez horários mais flexíveis no final do dia. O que prefere?\n```\n\n### Cancelamento em cima da hora\n```\nConsegui processar seu cancelamento para hoje. Para futuros agendamentos, recomendamos avisar com 24h de antecedência para evitar a taxa de remarcação. Posso ajudar com mais alguma coisa?\n```\n\n### Equipamento de aula não disponível\n```\nInfelizmente, o equipamento não está disponível nas próximas duas semanas devido à manutenção. Posso verificar disponibilidade a partir do dia 25/04 ou sugerir trazer equipamento pessoal?\n```\n\n## RESTRIÇÕES E LIMITES\n\n1. **NUNCA realizar agendamentos** para algo que não seja aulas de surf\n2. **NUNCA confirmar valores** de aulas de surf sem verificação\n3. **NUNCA dispensar** o tempo de preparo recomendado para cada aula\n4. **NUNCA agendar** aula incompatíveis na mesma sessão\n\n## INSTRUÇÕES ESPECIAIS\n\n1. **Identificação de precauções**:\n   - Se o cliente mencionar não saber nadar\n   - Se o cliente relatar doença ou deficiencia que incapacite ou dificulte fazer a aula de surf\n   - **AÇÃO OBRIGATÓRIA**: Transferir imediatamente para atendimento humano usando:\n     \"SISTEMA INFO - Precaução de segurança detectada, transferir para atendimento humano imediato.\"\n\n2. **Transferência para dúvidas**:\n   - Se o cliente demonstrar dúvidas sobre qual equipamento escolher\n   - Se o cliente questionar sobre resultados ou eficácia da aula\n   - **AÇÃO OBRIGATÓRIA**: Transferir para chat de dúvidas usando:\n     \"SISTEMA INFO - Ok vou transferir você para o setor de dúvidas - EXECUTAR Chat \"rag\"\n\n## Informações Auxiliares\n\n\n## EXEMPLOS DE DIÁLOGOS COMPLETOS\n\n**Exemplo 1: Agendamento Simples**\n```\nCliente: Quero marcar uma aula\nAmanda: Ótima escolha! Para melhorar a saúde se divertindo!. temos horários disponíveis nos dias:\n\nSegunda-feira(Data)\n- Manhã às 10:30\n- Tarde às 14:15\n- Noite às 21:00\n\nTerça-feira(Data)\n- Manhã às 10:30\n- Tarde às 14:15\n- Noite às 21:00\n\nQual dessas opções seria melhor para você?\n\nCliente: Dia 18 às 14:15 fica bom\nAmanda: Perfeito! Vou agendar sua aula para 18/04 às 14:15. Preciso confirmar seu nome completo e telefone, por favor.\n\nCliente: Maria Silva, (11) 98765-4321\nAmanda: Agendamento confirmado, Maria!\nAula de Surf: 18/04 às 14:15\nProtocolo: BE-3782-L\n\nRecomendamos chegar 15 minutos antes e passar protetor solar no dia. Posso ajudar com mais alguma coisa?\n```\n\n**Exemplo 2: Cancelamento**\n```\nCliente: Preciso cancelar minha aula de amanhã\nAmanda: Vou ajudar com o cancelamento. Poderia me informar seu nome completo e qual horário está agendado?\n\nCliente: Ana Pereira, esta marcado para amanhã às 10h\nAmanda: Encontrei seu agendamento, Ana. Aula de surf marcado para amanhã (15/04) às 10:00. Confirma que deseja cancelar este horário?\n\nCliente: Sim, preciso cancelar\nAmanda: Cancelamento realizado com sucesso!\nAula de Surf\nData: 15/04 às 10:00\nProtocolo de cancelamento: BE-C8932\n\nGostaria de remarcar para outra data ou posso ajudar com algo mais?\n```"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        864,
+        -80
+      ],
+      "id": "866e785f-7955-47de-9c5b-ef719add1a35",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "## 🎉 Preparação de Valores\n\nRecebe dados ( query e memory ) do servidor MCP ou do **chat teste**",
+        "height": 472,
+        "width": 588,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        80,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "fc2735e2-2a00-4519-8477-dec8b4b588bf",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## ✨ Agente IA de Agendamento\n\nChat de IA especializado em fazer agendamentos, fazer cancelamentos ou checar disponibilidades de horários",
+        "height": 468,
+        "width": 556,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        688,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "0f722ec5-d3b3-4626-b676-5eeb873d9630",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        128,
+        -96
+      ],
+      "id": "714fc382-efc3-4ef9-8900-0e7a83c9b827",
+      "name": "chat",
+      "webhookId": "99b87590-1476-4d6f-8203-6d41a458b553"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=\n  {\n    \"step_name\": \"Apresentação e Tira-Dúvidas\",\n    \"query\": {{ JSON.stringify( $json.chatInput) }},\n    \"memory\": \"test-n8n:{{ $json.sessionId }}\"\n  }\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        -96
+      ],
+      "id": "54768f1d-b286-4e5f-954a-ccc147ddcf09",
+      "name": "test-values",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        768,
+        96
+      ],
+      "id": "cb8a6e44-5882-4734-badb-73e2f52d9098",
+      "name": "model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        512,
+        -80
+      ],
+      "id": "d0cd2025-4515-4adb-b71a-5aae868c0822",
+      "name": "merge"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://workflows.codesefaz.local/mcp/test/sse",
+        "include": "selected",
+        "includeTools": [
+          "checkAvailability",
+          "scheduleAppointment",
+          "cancelSchedule"
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        1072,
+        96
+      ],
+      "id": "4d787dd6-8536-44bb-9847-91ea85a4c1ad",
+      "name": "MCP_schedule"
+    },
+    {
+      "parameters": {
+        "content": "## 📋 Notas Para Melhoria\n\n 1. Remarcações as vezes pede nome, email e telefone mesmo que o lead tenha acabado de informar e mesmo que a ia ainda tenha memória desses dados mas não usa ( google gemini ), talvez outras ias sejam melhor nesse aspecto.",
+        "height": 468,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1264,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "b635c9c1-6220-466b-99f1-c7d3c08be38f",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### ---------> PARA TESTES <---------",
+        "height": 192,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        112,
+        -144
+      ],
+      "id": "bac719dd-dc67-4204-a478-83f28a8a8ade",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('merge').item.json.memory }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        896,
+        96
+      ],
+      "id": "fc0ddbda-6045-4839-bab6-a796474679e9",
+      "name": "memory",
+      "credentials": {
+        "postgres": {
+          "id": "i37IDn2SW1eeq9LE",
+          "name": "Supabase Chat Memory"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "start": [
+      {
+        "json": {
+          "query": "Como vcs funcionam?",
+          "memory": "accountId-1:inboxId-2:conversationId-4"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "chat": {
+      "main": [
+        [
+          {
+            "node": "test-values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test-values": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP_schedule": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3ea2a182-dd98-4946-b115-2e51a4c1baf0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "5oTF5l5Lbx8vWg9U",
+  "tags": [
+    {
+      "createdAt": "2025-08-26T17:58:48.891Z",
+      "updatedAt": "2025-08-26T17:58:48.891Z",
+      "id": "DvVLP0DVbt1tT6um",
+      "name": "chat ia"
+    },
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

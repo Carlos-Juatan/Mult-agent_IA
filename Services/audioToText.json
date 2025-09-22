@@ -1,0 +1,429 @@
+{
+  "name": "audioToText",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        0
+      ],
+      "id": "7301ba34-d04a-4c1a-a4d0-0fb3814848e5",
+      "name": "start",
+      "notesInFlow": true,
+      "notes": "Started by another workflow"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        0
+      ],
+      "id": "d77dd9e0-a060-44ac-a3f0-2cbeb114bb3d",
+      "name": "end"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3570bd6f-ff66-4787-b5de-3166a551f5d2",
+              "name": "audioUrl",
+              "value": "={{ $json.body.attachments[0].data_url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "756fe40f-4d43-4124-a8b9-a847f9cd5f32",
+      "name": "getAudioUrl",
+      "notesInFlow": true,
+      "notes": "Get only the audio url"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.audioUrl }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        432,
+        0
+      ],
+      "id": "2c8c550f-6eea-4476-b988-9d29cc1e98a8",
+      "name": "downloadAudio",
+      "notesInFlow": true,
+      "notes": "Get .oga audio from url"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://conversor-audio.codesefaz.local/convert",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "audio",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        0
+      ],
+      "id": "e1a004f7-2ccf-4ccf-95d7-4c39908246cb",
+      "name": "convertAudio",
+      "notesInFlow": true,
+      "notes": "Use ffmpeg api (.oga to .wav)"
+    },
+    {
+      "parameters": {
+        "operation": "binaryToPropery",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        864,
+        0
+      ],
+      "id": "bfd6a085-0966-40d0-9262-22929e10b478",
+      "name": "audioToBase64"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://speech.googleapis.com/v1/speech:recognize",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"config\": {\n    \"encoding\": \"LINEAR16\",\n    \"sampleRateHertz\": 48000,\n    \"languageCode\": \"pt-BR\"\n  },\n  \"audio\": {\n    \"content\": \"{{ $json.data }}\"\n  }\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "323f4a45-123c-4141-9679-cd7d400323f5",
+      "name": "getTrascription",
+      "notesInFlow": true,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "bLlNXPsRMX6GlO7P",
+          "name": "Google cloud - Header Auth account"
+        }
+      },
+      "notes": "Get audio trascription"
+    }
+  ],
+  "pinData": {
+    "start": [
+      {
+        "json": {
+          "headers": {
+            "host": "workflows.codesefaz.local",
+            "user-agent": "rest-client/2.1.0 (linux-musl x86_64) ruby/3.3.3p89",
+            "content-length": "4886",
+            "accept": "application/json",
+            "accept-encoding": "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+            "content-type": "application/json",
+            "x-forwarded-for": "172.18.0.4",
+            "x-forwarded-host": "workflows.codesefaz.local",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "b7aeb1fe0ee8",
+            "x-real-ip": "172.18.0.4"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "account": {
+              "id": 2,
+              "name": "codesefaz"
+            },
+            "additional_attributes": {},
+            "content_attributes": {},
+            "content_type": "text",
+            "content": null,
+            "conversation": {
+              "additional_attributes": {},
+              "can_reply": true,
+              "channel": "Channel::Api",
+              "contact_inbox": {
+                "id": 26,
+                "contact_id": 6,
+                "inbox_id": 10,
+                "source_id": "bb6caaa4-5015-4b53-9d96-250327787b26",
+                "created_at": "2025-08-12T19:38:33.259Z",
+                "updated_at": "2025-08-12T19:38:33.259Z",
+                "hmac_verified": false,
+                "pubsub_token": "DcpVFwUQrRfSYJVuLkUffeqH"
+              },
+              "id": 20,
+              "inbox_id": 10,
+              "messages": [
+                {
+                  "id": 230,
+                  "content": null,
+                  "account_id": 2,
+                  "inbox_id": 10,
+                  "conversation_id": 20,
+                  "message_type": 0,
+                  "created_at": 1755629344,
+                  "updated_at": "2025-08-19T18:49:04.036Z",
+                  "private": false,
+                  "status": "sent",
+                  "source_id": "WAID:CE757B27D662DC1125B60DD38B43BDC5",
+                  "content_type": "text",
+                  "content_attributes": {},
+                  "sender_type": "Contact",
+                  "sender_id": 6,
+                  "external_source_ids": {},
+                  "additional_attributes": {},
+                  "processed_message_content": null,
+                  "sentiment": {},
+                  "conversation": {
+                    "assignee_id": 2,
+                    "unread_count": 1,
+                    "last_activity_at": 1755629344,
+                    "contact_inbox": {
+                      "source_id": "bb6caaa4-5015-4b53-9d96-250327787b26"
+                    }
+                  },
+                  "attachments": [
+                    {
+                      "id": 4,
+                      "message_id": 230,
+                      "file_type": "audio",
+                      "account_id": 2,
+                      "extension": null,
+                      "data_url": "https://chat4.codesefaz.local/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBEdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57863ec00195bef0b69c20b791e2ddc7f18e4506/4ql8oo.oga",
+                      "thumb_url": "",
+                      "file_size": 8954,
+                      "width": null,
+                      "height": null
+                    }
+                  ],
+                  "sender": {
+                    "additional_attributes": {},
+                    "custom_attributes": {},
+                    "email": null,
+                    "id": 6,
+                    "identifier": "558592647973@s.whatsapp.net",
+                    "name": "Car_J",
+                    "phone_number": "+558592647973",
+                    "thumbnail": "https://chat4.codesefaz.local/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBEUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e066331aa2b1d99daaf56acb5473a650f0d733bb/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lKYW5CbFp3WTZCa1ZVT2hOeVpYTnBlbVZmZEc5ZlptbHNiRnNIYVFINk1BPT0iLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--4502306501dc04852993ea1e722c466e26844ebe/file.enc",
+                    "blocked": false,
+                    "type": "contact"
+                  }
+                }
+              ],
+              "labels": [],
+              "meta": {
+                "sender": {
+                  "additional_attributes": {},
+                  "custom_attributes": {},
+                  "email": null,
+                  "id": 6,
+                  "identifier": "558592647973@s.whatsapp.net",
+                  "name": "Car_J",
+                  "phone_number": "+558592647973",
+                  "thumbnail": "https://chat4.codesefaz.local/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBEUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e066331aa2b1d99daaf56acb5473a650f0d733bb/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lKYW5CbFp3WTZCa1ZVT2hOeVpYTnBlbVZmZEc5ZlptbHNiRnNIYVFINk1BPT0iLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--4502306501dc04852993ea1e722c466e26844ebe/file.enc",
+                  "blocked": false,
+                  "type": "contact"
+                },
+                "assignee": {
+                  "id": 2,
+                  "name": "carlos juatan",
+                  "available_name": "carlos juatan",
+                  "avatar_url": "",
+                  "type": "user",
+                  "availability_status": null,
+                  "thumbnail": ""
+                },
+                "team": null,
+                "hmac_verified": false
+              },
+              "status": "open",
+              "custom_attributes": {},
+              "snoozed_until": null,
+              "unread_count": 1,
+              "first_reply_created_at": "2025-08-12T19:38:46.774Z",
+              "priority": null,
+              "waiting_since": 1755629344,
+              "agent_last_seen_at": 1755195987,
+              "contact_last_seen_at": 1755028154,
+              "last_activity_at": 1755629344,
+              "timestamp": 1755629344,
+              "created_at": 1755027513,
+              "updated_at": 1755629344.172958
+            },
+            "created_at": "2025-08-19T18:49:04.036Z",
+            "id": 230,
+            "inbox": {
+              "id": 10,
+              "name": "robonildo"
+            },
+            "message_type": "incoming",
+            "private": false,
+            "sender": {
+              "account": {
+                "id": 2,
+                "name": "codesefaz"
+              },
+              "additional_attributes": {},
+              "avatar": "https://chat4.codesefaz.local/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBEUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e066331aa2b1d99daaf56acb5473a650f0d733bb/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lKYW5CbFp3WTZCa1ZVT2hOeVpYTnBlbVZmZEc5ZlptbHNiRnNIYVFINk1BPT0iLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--4502306501dc04852993ea1e722c466e26844ebe/file.enc",
+              "custom_attributes": {},
+              "email": null,
+              "id": 6,
+              "identifier": "558592647973@s.whatsapp.net",
+              "name": "Car_J",
+              "phone_number": "+558592647973",
+              "thumbnail": "https://chat4.codesefaz.local/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBEUT09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e066331aa2b1d99daaf56acb5473a650f0d733bb/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lKYW5CbFp3WTZCa1ZVT2hOeVpYTnBlbVZmZEc5ZlptbHNiRnNIYVFINk1BPT0iLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--4502306501dc04852993ea1e722c466e26844ebe/file.enc",
+              "blocked": false
+            },
+            "source_id": "WAID:CE757B27D662DC1125B60DD38B43BDC5",
+            "attachments": [
+              {
+                "id": 4,
+                "message_id": 230,
+                "file_type": "audio",
+                "account_id": 2,
+                "extension": null,
+                "data_url": "https://chat4.codesefaz.local/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBEdz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--57863ec00195bef0b69c20b791e2ddc7f18e4506/4ql8oo.oga",
+                "thumb_url": "",
+                "file_size": 8954,
+                "width": null,
+                "height": null
+              }
+            ],
+            "event": "message_created"
+          },
+          "webhookUrl": "https://webhooks.codesefaz.local/webhook/mensagem-do-chatwoot",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "getAudioUrl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getAudioUrl": {
+      "main": [
+        [
+          {
+            "node": "downloadAudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "downloadAudio": {
+      "main": [
+        [
+          {
+            "node": "convertAudio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convertAudio": {
+      "main": [
+        [
+          {
+            "node": "audioToBase64",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "audioToBase64": {
+      "main": [
+        [
+          {
+            "node": "getTrascription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getTrascription": {
+      "main": [
+        [
+          {
+            "node": "end",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "741ea3e9-cf3b-4fd1-b049-8fe6401da354",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "cyS3yGhU85yVMVXz",
+  "tags": [
+    {
+      "createdAt": "2025-08-26T18:32:48.606Z",
+      "updatedAt": "2025-08-26T18:32:48.606Z",
+      "id": "8rvDzD60zd9CvTbT",
+      "name": "services"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

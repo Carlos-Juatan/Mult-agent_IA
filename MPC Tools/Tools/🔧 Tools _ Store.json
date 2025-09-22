@@ -1,0 +1,881 @@
+{
+  "name": "🔧 Tools | Store",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "service"
+            },
+            {
+              "name": "query"
+            },
+            {
+              "name": "local_destino",
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        144,
+        48
+      ],
+      "id": "183de75c-e0e2-4894-b495-268f608fd432",
+      "name": "start"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -112
+      ],
+      "id": "d2c54903-9b7e-4b6f-955e-7153ee5e0a06",
+      "name": "test_trigger"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ae745b50-3cf4-4e37-90fb-33993737b7b9",
+              "name": "service",
+              "value": "products",
+              "type": "string"
+            },
+            {
+              "id": "89f99d95-eed8-45ce-ada7-ad1ad44086a9",
+              "name": "query",
+              "value": "me mostre a prancha de surf azul.",
+              "type": "string"
+            },
+            {
+              "id": "d18376fd-26ad-4d40-b7cc-6cea91298257",
+              "name": "local_destino.cep",
+              "value": 60334128,
+              "type": "number"
+            },
+            {
+              "id": "c00702a6-0790-4da0-9439-88d7d0e13c5b",
+              "name": "local_destino.rua",
+              "value": "Tambaú",
+              "type": "string"
+            },
+            {
+              "id": "5be936d2-e0f3-4106-bf8d-89f0b303e0be",
+              "name": "local_destino.numero",
+              "value": 223,
+              "type": "number"
+            },
+            {
+              "id": "ad6704a9-7c9a-49aa-8596-decfaa54cb78",
+              "name": "local_destino.complemento",
+              "value": "Na esquina da rua.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        144,
+        -112
+      ],
+      "id": "781491d0-113c-49cb-8f10-6490834f925b",
+      "name": "test_data",
+      "retryOnFail": false,
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.service }}",
+                    "rightValue": "products",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "e431f775-461b-4007-9c27-41d066cb9acd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "products"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6cc52529-c072-4150-9160-2cf496ed2783",
+                    "leftValue": "={{ $json.data.service }}",
+                    "rightValue": "delivery",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "delivery"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fef72ac6-f68a-4cb1-88fd-3a69cb0306e5",
+                    "leftValue": "={{ $json.data.service }}",
+                    "rightValue": "payment",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "payment"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        560,
+        -64
+      ],
+      "id": "efec6397-bf3c-4257-baa2-f3baaed0bc5b",
+      "name": "serviceSelect"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d8969e75-8acf-4b7c-8567-8a33d5a7fb03",
+              "name": "reutrn",
+              "value": "Esse serviço está em desenvolvimento no momento.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        352
+      ],
+      "id": "b70fde87-2f99-4adb-ba91-834c9a6bcc65",
+      "name": "payment",
+      "notesInFlow": true,
+      "notes": "Work in Progress"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4f861eda-5d06-4c3e-9cd7-0990f4fccbe3",
+              "name": "data",
+              "value": "={{ $json }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        -48
+      ],
+      "id": "c02720c2-8c44-4fbe-92f7-3ac2f52fa7ef",
+      "name": "variables"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "444d8a12-92dd-4427-8d89-8d2f975e774e",
+              "name": "return",
+              "value": "=Deu um erro ao tentar localizar endereço com o CEP {{ $json.data.local_destino.cep }}, o CEP pode estar incorreto ou o serviço pode estar indisponível no momento.\n\nVerifique o CEP ou tente mais tarde.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1008,
+        32
+      ],
+      "id": "284b8e97-d3cc-44ba-a50c-4616614b5174",
+      "name": "cepNotFound"
+    },
+    {
+      "parameters": {
+        "content": "## ⭐ Começo & Variáveis",
+        "height": 432,
+        "width": 880,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -240
+      ],
+      "id": "012b3fc0-8e43-43ac-b502-b8a45e98f7d0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Testes",
+        "height": 208,
+        "width": 368,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        -176
+      ],
+      "id": "b9a7a791-7475-48fe-a68e-75522587cfa0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 🚚 Retornar Valor de Frete",
+        "height": 432,
+        "width": 848,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        768,
+        -240
+      ],
+      "id": "8373e977-ba83-4cc0-bc59-7741292b6768",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## 💸 Pagamentos",
+        "height": 368,
+        "width": 464,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        768,
+        224
+      ],
+      "id": "c1c135f7-d400-495a-b6d3-edb9abc5d971",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "url": "=https://viacep.com.br/ws/{{ $json.data.local_destino.cep }}/json/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        -80
+      ],
+      "id": "581a8099-03a1-454f-9b3a-36f7ca8d6eb6",
+      "name": "getCEP",
+      "retryOnFail": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f3f3e568-fc3f-4697-9642-f52a5a82e191",
+              "name": "return",
+              "value": "=O valor do frete para o seu endereço é de R${{ $json['Preço de Frete'] }}.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1216,
+        -176
+      ],
+      "id": "2f982c71-5bbc-45ea-9547-5f5f387258c6",
+      "name": "returnValue"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        -176
+      ],
+      "id": "6d641abd-84fd-444e-a6cc-e0f4e37506df",
+      "name": "end_delivery"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        352
+      ],
+      "id": "b96e7313-dde2-4d82-9c74-4f64dfaf78fa",
+      "name": "end_payment"
+    },
+    {
+      "parameters": {
+        "content": "# 📋 Notas Para Melhoria\n\n## ----> ---->  ----> Para Novas Funções <---- <---- <----\n\n1. **Recomendações Personalizadas**: O agente pode oferecer sugestões de produtos com base nas informações do cliente ou em itens populares.\n   - **Workflow**: O agente identifica o perfil do cliente e usa essa informação para buscar produtos semelhantes no banco de dados.\n\n2. **Verificador de Disponibilidade na Loja Física**: Além do frete para a loja online, o cliente pode querer saber se um produto está disponível para retirada na loja física.\n   - **Workflow**: O agente de IA usa uma ferramenta para verificar o estoque de um produto em uma loja física específica.\n\n3. **Processamento de Devoluções e Trocas**: Esta função poderia guiar o cliente pelo processo de devolução ou troca de um produto.\n   - **Workflow**: O agente de IA coleta informações sobre o produto, motivo da devolução e dados do pedido, e inicia um processo de devolução.\n\n4. **Acompanhamento de Pedidos**: O cliente pode querer saber o status do seu pedido. O agente pode responder a perguntas como \"Onde está meu pedido?\".\n   - **Workflow**: O agente solicita o número do pedido e usa uma ferramenta para consultar a transportadora.\n\n5. **Coleta de Feedback**: O agente de vendas pode pedir um feedback após a compra.\n   - **Workflow**: O agente solicita uma avaliação do cliente e salva a resposta em um banco de dados.\n> .\n> .\n> .\n\n## ----> ---->  ----> Para Melhorar o Sistema de Busca de Produtos <---- <---- <----\n\n1. Busca Semântica (Embeddings e Vetores)\n\nA abordagem mais avançada e eficaz é o uso de embeddings. Em vez de buscar por palavras-chave, você busca por \"significado\".\n\n   - Como funciona: A IA transforma a consulta do cliente (ex: \"roupa para ir na praia\") e as descrições dos seus produtos em vetores numéricos. Em seguida, o sistema procura por vetores que são semanticamente próximos, mesmo que as palavras não sejam as mesmas.\n\n   - Vantagens: Se o cliente buscar por \"laicra para surf\", a busca semântica pode entender que \"roupa de mergulho\" é um termo relacionado e retornar o produto correto. Isso resolve o problema de sinônimos e termos relacionados.\n\nVocê já tem um nó Postgres PGVector Store no seu workflow, que é a ferramenta ideal para essa tarefa. Para implementá-la, você precisa:\n\n   1. Gerar os Embeddings: Use um modelo de linguagem (como o Google Gemini) para criar vetores para o nome e a descrição de cada produto.\n\n   2. Armazenar os Vetores: Salve esses vetores na sua tabela do Postgres.\n\n   3. Realizar a Busca: Quando o cliente fizer uma pergunta, gere o vetor da consulta e use a ferramenta de busca vetorial para encontrar os produtos mais semanticamente próximos.\n\n2. Otimização do Search Term (Melhoria Contínua)\n\nSe a busca vetorial não for uma opção no momento, você pode aprimorar a sua busca atual por palavras-chave com um modelo de IA.\n\n   - Sinônimos e Alternativas: Use um nó de LLM antes do nó getProducts para gerar sinônimos para a query_keyword do cliente. Por exemplo, se o cliente pesquisar \"roupa\", o LLM pode sugerir roupa, vestuário, camisa, camiseta, short, etc.\n\n   - Correção de Erros de Digitação: O LLM também pode corrigir erros de digitação (ex: caimsa para camisa) antes de enviar a busca para o Baserow. Essa técnica é conhecida como \"busca fonética\".\n\n   - Tags e Categorias: Adicione mais tags e categorias aos seus produtos no Baserow. O LLM pode usar essas tags para refinar a busca. Por exemplo, se a consulta for \"roupa\", o agente pode buscar na categoria roupas.",
+        "height": 1300,
+        "width": 1052,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1536,
+        -864
+      ],
+      "typeVersion": 1,
+      "id": "620c61f2-81e2-45d2-b669-0aa3fffc03bd",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "Delivery",
+        "limit": 1,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "estado",
+              "condition": "eq",
+              "keyValue": "={{ $json.uf }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1008,
+        -176
+      ],
+      "id": "b6086078-c2f7-4b4c-a792-003e99571c82",
+      "name": "getPrice",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data.query }}",
+        "options": {
+          "systemMessage": "# FUNÇÃO:\nVocê é uma assistente de almocharifado, sua função é realizar uma busca pelo banco de dados e verificar se existe algum item disponível para o cliente.\n\n# FERRAMENTAS DISPONÍVEIS\n\n## 1. Banco de dados vetoriais `RAG Vector`\n**função**: Busca itens genéricos no banco vetorial, além de suas metadatas contendo a \"categoria\" do item e a \"tag\" para a busca dos modelos disponíveis para o item\n\n## 2. Banco de dados `productModels`\n**função**: Buscar os modelos disponíveis usando uma \"tag\" para retornar o nome, o modelo, o preço, a imagem e a quantidade no estoque do produto\n\n# FLUXO DE TRABALHO\n\n## 1. Busca vetorial\n**função**: Realizar uma busca vetorial pelo produto usando a `querry` do cliente e retornar a `tag` do produto encontrado\n\n## 2. Buscar Modelos\n**função**: Realizar uma busca pelos modelos pedidos pelo cliente usando a `tag` do produto e o modelo pedido pela `query` do cliente\n\n# SAÍDA DESEJADA\n\n## Exemplo 1\nhuman: \"Quais são os modelos de prancha de surf laranja e amarelo?\"\noutput:\n{\n  \"produto\": \"prancha de surf\",\n  \"modelos\": [\n    {\n      \"nome: \"prancha de surf titan\",\n      \"modelo\": \"laranja,\n      \"imagem\": \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F8e%2Fb6%2Fe6%2F8eb6e6df086be070be6bcd201f098616.jpg&f=1&nofb=1&ipt=e0eb517e419bf78980e1443ed91fd2a1ec2127c317f5953e489c9e022f3e4315\",\n      \"preco\": 400,\n      \"estoque\": 2\n    },\n    {\n      \"nome: \"prancha de surf titan\",\n      \"modelo\": \"amarelo,\n      \"imagem\": \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.1974surfboards.com%2Fwp-content%2Fuploads%2F2018%2F10%2Fprancha-de-surfe-overall-1974-surfboards.jpg&f=1&nofb=1&ipt=5db483970a7034d42b88fb2f860e25bc9dbe4814649b1a155f560a4f3cd13830\",\n      \"preco\": 400,\n      \"estoque\": 5\n    }\n  ]\n}\n\n\n## Exemplo 2\nhuman: \"Vocês tem a camisa polo titan azul?\"\noutput:\n{\n  \"produto\": \"prancha de surf\",\n  \"modelos\": [\n    {\n      \"nome: \"camisa polo titan\",\n      \"modelo\": \"azul,\n      \"imagem\": \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimages.tcdn.com.br%2Fimg%2Fimg_prod%2F914261%2Fcamisa_polo_masculina_azul_1769_1_2ec514d9bdf2bca0fe0bb3ad633b0506.jpg&f=1&nofb=1&ipt=7e2e758ae5f1571b26f9cb524fa3f84ddc6970ee8737992e0d2dbba4cf84d1bd\",\n      \"preco\": 50,\n      \"estoque\": 20\n    }\n  ]\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        -736
+      ],
+      "id": "20c00b32-9f43-4134-9c31-2d9bbfaa35f8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Use essa tool para pesquisar itens disponíveis na loja",
+        "tableName": {
+          "__rl": true,
+          "value": "documents_store_vector",
+          "mode": "list",
+          "cachedResultName": "documents_store_vector"
+        },
+        "topK": 20,
+        "useReranker": true,
+        "options": {
+          "queryName": "match_documents_store"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.3,
+      "position": [
+        944,
+        -544
+      ],
+      "id": "92fab0ee-a6e4-45bb-bfee-52ddeaacd428",
+      "name": "RAG Vector",
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        912,
+        -384
+      ],
+      "id": "124e620a-aefe-46c9-9fc9-d47cad9409d4",
+      "name": "embeddings",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.rerankerCohere",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        -384
+      ],
+      "id": "46dd82f7-4a91-4f27-82e5-9019c971cdc8",
+      "name": "reranker",
+      "credentials": {
+        "cohereApi": {
+          "id": "w8LZLcKQFNE0NCYD",
+          "name": "CohereApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "Product Models",
+        "returnAll": true,
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "tag",
+              "condition": "eq",
+              "keyValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('conditions0_Field_Value', `tag retornada como metadata do documento vetorial encontrado.`, 'string') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        1232,
+        -544
+      ],
+      "id": "911df77a-0908-49e9-ab3e-783ed07e8527",
+      "name": "productModels",
+      "notesInFlow": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "pvSzMX1NSuLnku0e",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🚚 Retornar Todos os Produtos da Loja",
+        "height": 576,
+        "width": 848,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        768,
+        -848
+      ],
+      "id": "99e59936-037a-4301-8536-94f038161914",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        832,
+        -544
+      ],
+      "id": "a5af8631-478e-47c9-acff-8064d183c701",
+      "name": "model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const outputItem = $input.first().json.output;\nconst jsonString = outputItem.replace(/```json\\n|\\n```/g, '');\nconst cleanedJson = JSON.parse(jsonString);\n\nreturn cleanedJson;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1216,
+        -736
+      ],
+      "id": "01bb7ba7-2ae5-47e3-8063-65b27174e382",
+      "name": "jsonFormat"
+    },
+    {
+      "parameters": {
+        "jsCode": "const jsonInput = $('jsonFormat').first().json;\n\n// Garante que o input é um array para evitar erros.\nconst produtos = Array.isArray(jsonInput) ? jsonInput : [jsonInput];\n\nlet markdownOutput = '';\n\n// Itera sobre cada produto\nprodutos.forEach(produto => {\n  // Itera sobre cada modelo dentro do produto\n  produto.modelos.forEach(modelo => {\n    // Filtra apenas os modelos com estoque maior que zero\n    if (modelo.estoque > 0) {\n      markdownOutput += `# nome: ${modelo.nome}\\n`;\n      markdownOutput += `# modelo: ${modelo.modelo}\\n`;\n      markdownOutput += `# preço: ${modelo.preco}\\n`;\n      markdownOutput += `![imagem do modelo](${modelo.imagem})\\n\\n`;\n    }\n  });\n});\n\n// Retorna a string Markdown completa para o próximo nó\nreturn [{\n  json: {\n    markdown: markdownOutput\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1424,
+        -1072
+      ],
+      "id": "9c619bd5-af64-46af-b4b5-f7dbacb05130",
+      "name": "toMarkdown"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtém o JSON de entrada do nó anterior.\nconst jsonInput = $('jsonFormat').first().json;\n\n// Garante que o input é um array.\nconst produtos = Array.isArray(jsonInput) ? jsonInput : [jsonInput];\n\nlet whatsappMessage = '';\n\n// Itera sobre cada produto\nprodutos.forEach(produto => {\n  // Itera sobre cada modelo do produto\n  produto.modelos.forEach(modelo => {\n    // Filtra apenas os modelos com estoque maior que zero\n    if (modelo.estoque > 0) {\n      whatsappMessage += `*Produto:* ${modelo.nome}\\n`;\n      whatsappMessage += `*Modelo:* ${modelo.modelo}\\n`;\n      whatsappMessage += `*Preço:* R$ ${modelo.preco.toFixed(2)}\\n`;\n      whatsappMessage += `${modelo.imagem}\\n`;\n      whatsappMessage += `\\n`; // Adiciona uma linha em branco para separar os itens\n    }\n  });\n});\n\n// Retorna a mensagem formatada para o próximo nó\nreturn [{\n  json: {\n    message: whatsappMessage\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1424,
+        -736
+      ],
+      "id": "ade351d6-17e9-44b4-a9ea-84b094811371",
+      "name": "toMessage"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        -496
+      ],
+      "id": "518a1e63-2f38-4100-a96a-c5cb82265f2b",
+      "name": "end_produts"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test_trigger": {
+      "main": [
+        [
+          {
+            "node": "test_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test_data": {
+      "main": [
+        [
+          {
+            "node": "variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "serviceSelect": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "getCEP",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "variables": {
+      "main": [
+        [
+          {
+            "node": "serviceSelect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cepNotFound": {
+      "main": [
+        []
+      ]
+    },
+    "payment": {
+      "main": [
+        [
+          {
+            "node": "end_payment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getCEP": {
+      "main": [
+        [
+          {
+            "node": "getPrice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "cepNotFound",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "returnValue": {
+      "main": [
+        [
+          {
+            "node": "end_delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getPrice": {
+      "main": [
+        [
+          {
+            "node": "returnValue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "jsonFormat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Vector": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "RAG Vector",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "reranker": {
+      "ai_reranker": [
+        [
+          {
+            "node": "RAG Vector",
+            "type": "ai_reranker",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "productModels": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "jsonFormat": {
+      "main": [
+        [
+          {
+            "node": "toMessage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "toMessage": {
+      "main": [
+        [
+          {
+            "node": "end_produts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5bb40774-ea59-4628-92ab-6cebb6307a98",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "BW5JIYQjJ8AAxNMd",
+  "tags": [
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-15T18:20:47.241Z",
+      "updatedAt": "2025-08-15T18:20:47.241Z",
+      "id": "AMDUWvGTWEf9Q2Wz",
+      "name": "Tools"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

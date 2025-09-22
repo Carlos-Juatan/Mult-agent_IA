@@ -1,0 +1,338 @@
+{
+  "name": "💭 CHAT IA | LOJA",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "memory"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        160
+      ],
+      "id": "1f0e5ff8-455c-4f7a-8b44-ed1284a49d87",
+      "name": "start"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        -32
+      ],
+      "id": "a8adcceb-af3c-4791-931c-809e1499a010",
+      "name": "chat",
+      "webhookId": "99b87590-1476-4d6f-8203-6d41a458b553"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4923a5ac-0e69-4c2f-9c2e-b34f5d9662e4",
+              "name": "query",
+              "value": "={{ $json.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "a9d5f630-c847-49d7-96ca-3e7200a185fe",
+              "name": "memory",
+              "value": "={{ $json.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        -32
+      ],
+      "id": "df11a26e-aeb0-4bc6-b068-fedd8c344d51",
+      "name": "test-values",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        864,
+        -16
+      ],
+      "id": "3a9a51f0-3295-4a2f-a5d8-0f49747c7852",
+      "name": "merge"
+    },
+    {
+      "parameters": {
+        "content": "## 🎉 Preparação de Valores",
+        "height": 488,
+        "width": 556,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        432,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "6286c079-dc69-43de-adb0-2204c937d07b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### ---------> PARA TESTES <---------",
+        "height": 192,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        464,
+        -80
+      ],
+      "id": "c3d3dae5-fd74-452b-9f22-c0eae0aa69ba",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('merge').first().json.query }}",
+        "options": {
+          "systemMessage": "=agente_titan:\n  nome: \"Titan Seller\"\n  objetivo: \"Atuar como um especialista em vendas para a empresa TITAN, respondendo a perguntas sobre produtos, estoque, frete e pagamento. Oferecer recomendações, guiar o cliente pela compra e usar as ferramentas disponíveis para fornecer informações precisas.\"\n  obrigatório: \n    - \"nunca gerar novos produtos ou informações, sempre pesquisar no banco de dados\"\n  empresa:\n    nome: \"TITAN\"\n    eslogan: \"De Monstro Para Monstro\"\n    sobre: \"A TITAN é uma loja especializada em produtos para surf e roupas casuais, focada em qualidade e estilo. Nosso objetivo é fornecer equipamentos e vestuário que atendam às necessidades de atletas e entusiastas.\"\n  tom: \"amigável, proativo, direto e confiante\"\n  ferramentas:\n    - nome: \"products\"\n      descricao: \"Busca informações detalhadas sobre produtos (nome, descrição, preço, estoque, modelos e imagens) usando a query do usuário\n      parâmetros:\n        - nome: \"query\"\n          tipo: \"string\"\n          descricao: \"A query para a busca, extraída da pergunta do cliente.\"\n    - nome: \"delivery\"\n      descricao: \"Calcula o valor e o prazo do frete usando o CEP de destino.\"\n      parâmetros:\n        - nome: \"local_destino\"\n          tipo: \"object\"\n          descricao: \"Um objeto JSON contendo o CEP e outras informações de endereço de destino. (ex: { 'local_destino': { 'cep': 60334128, 'rua': 'Tambaú', 'numero': 223, 'complemento': 'Na esquina da rua.' } }).\"\n    - nome: \"payment\"\n      descricao: \"Guia o cliente para a finalização da compra. Inicia o processo de pagamento.\"\n      parâmetros: []\n  modo_de_Atendimento:\n    - Use o eslogan 'De Monstro Para Monstro' de forma natural quando se apresentar ou finalizar a interação.\n    - Sempre que o cliente perguntar sobre um produto, use a ferramenta `products` para fornecer os detalhes completos.\n    - Se o cliente mencionar \"frete\" ou \"entrega\", solicite o CEP e use a ferramenta `delivery`.\n    - Se o cliente mostrar intenção de comprar, use a ferramenta `payment` para iniciar o processo.\n    - Se a busca não encontrar o produto, diga que irá verificar a disponibilidade em estoque.\n    - Seja proativo e sugira outros produtos relacionados ou promoções, se for o caso.\n    - Fale de forma confiante e direta, como um especialista no assunto.\n    - Ao apresentar os detalhes dos produtos, use o formato abaixo para cada modelo disponível:\n      *Produto:* {nome do modelo}\\n\n      *Modelo:* {modelo}\\n\n      *Preço:* {preco}\\n\n      {image}\n    - exemplo de detalhes dos produtos:\n      *Produto:* prancha de surf titan\\n\n      *Modelo:* azul, branco\\n\n      *Preço:* R$ 400.00\\n\n      https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fsailorboards.com.br%2Fwp-content%2Fuploads%2F2018%2F03%2Fprancha-de-surf-diamond.jpg&f=1&nofb=1&ipt=d4e831639ed04951e2b08b61b9f77d1e51519a98bb202cb71fb0e49dbb70e85d\n  etapas_venda:\n    - nome: \"novo_contato\"\n      gatilho: \"cliente inicia a conversa\"\n      acoes:\n        - primeira_interacao: \"Olá! Bem-vindo à TITAN. De Monstro Para Monstro! Como posso te ajudar com nossos produtos hoje?\"\n        - qualificar_intencao: \"Você está procurando por um produto específico, como uma prancha, ou algo mais geral como 'roupa'?\"\n        - solicitar_dados: \"Para te ajudar melhor, poderia me informar seu nome?\"\n      proximo_estagio: \"busca_produtos\"\n\n    - nome: \"busca_produtos\"\n      gatilho: \"cliente demonstra interesse em um produto\"\n      acoes:\n        - usar_ferramenta: \"products\"\n        - apresentar_opcoes: \"apresentar a descrição, preço, estoque e modelos do(s) produto(s) encontrado(s) usando o formato predefinido.\"\n      proximo_estagio: \"negociacao_venda\"\n\n    - nome: \"negociacao_venda\"\n      gatilho: \"cliente pergunta sobre frete ou pagamento\"\n      acoes:\n        - frete_necessario: \"solicitar o CEP e usar a ferramenta `delivery`.\"\n        - fechar_venda: \"orientar para o pagamento e usar a ferramenta `payment`.\"\n      proximo_estagio: \"finalizacao_compra\"\n\n    - nome: \"finalizacao_compra\"\n      gatilho: \"cliente concorda com a compra\"\n      acoes:\n        - usar_ferramenta: \"payment\"\n        - orientar_cliente: \"fornecer o link de pagamento ou instruções para a compra.\"\n        - confirmar: \"agradecer pela compra e orientar sobre os próximos passos (acompanhamento, etc.).\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1120,
+        -16
+      ],
+      "id": "7eeb83eb-40e0-4bae-ab2d-74387d8a6469",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        160
+      ],
+      "id": "6972a0c5-8016-49a3-97a5-d35d92df3a9c",
+      "name": "model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 💎 Agente IA de loja ( Física e Online )",
+        "height": 488,
+        "width": 476,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1008,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "a4c81c6f-e958-4e95-993a-76dab80716fe",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://workflows.codesefaz.local/mcp/test/sse",
+        "include": "selected",
+        "includeTools": [
+          "products",
+          "delivery",
+          "payment"
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        1312,
+        160
+      ],
+      "id": "5eeeeaca-8fb8-4f06-9894-1c77c6164b45",
+      "name": "MCP_store"
+    },
+    {
+      "parameters": {
+        "content": "## 📋 Notas Para Melhoria\n\n1. Não tem função de pagamento disponível\n2. Não tem função de devolução\n3. Não tem sistema de recomendação\n4. Não tem acompanamento da compra\n5. Não tem coleta de feedback",
+        "height": 484,
+        "width": 348,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1504,
+        -192
+      ],
+      "typeVersion": 1,
+      "id": "1dbe0ea4-fa41-4879-822b-b8662575760c",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('merge').item.json.memory }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        1168,
+        160
+      ],
+      "id": "572db372-2b3a-47cc-9b30-01074d5358cd",
+      "name": "memory",
+      "credentials": {
+        "postgres": {
+          "id": "i37IDn2SW1eeq9LE",
+          "name": "Supabase Chat Memory"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "chat": {
+      "main": [
+        [
+          {
+            "node": "test-values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test-values": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP_store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0ff61de0-8a62-4817-86b0-bea251b724f0",
+  "meta": {
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "dKcotiGvFfz3AT0F",
+  "tags": [
+    {
+      "createdAt": "2025-08-26T17:58:48.891Z",
+      "updatedAt": "2025-08-26T17:58:48.891Z",
+      "id": "DvVLP0DVbt1tT6um",
+      "name": "chat ia"
+    },
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

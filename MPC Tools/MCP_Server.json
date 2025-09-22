@@ -1,0 +1,948 @@
+{
+  "name": "MCP_Server",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "test"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 1,
+      "position": [
+        16,
+        0
+      ],
+      "id": "5364396d-3c05-49cd-bd58-201a33414034",
+      "name": "MCP Server Trigger",
+      "webhookId": "c52838aa-31ad-4985-984e-4675da4828ce",
+      "alwaysOutputData": false,
+      "executeOnce": false,
+      "retryOnFail": false
+    },
+    {
+      "parameters": {
+        "name": "inicialService",
+        "description": "### 1. CHAT IA | ATENDIMENTO INICIAL (`inicialService`)\n**Função**: Ponto de entrada para todas as conversas novas\n\n**QUANDO USAR**:\n- Sempre que o usuário inicia uma nova conversa\n- Quando a intenção do usuário não está clara\n- Quando é necessário coletar informações iniciais sobre necessidades estéticas\n\n**QUANDO NÃO USAR**:\n- Esse chat não responde dúvidas específicas sobre produtos ou surf\n- Esse chat não consulta informações detalhadas sobre a loja ou aulas de surf\n- Esse chat não apresenta o catálogo de produtos ou aulas de surf\n- Esse chat não faz recomendações personalizadas de produtos ou aulas de surf\n- Esse chat não processa agendamentos\n",
+        "workflowId": {
+          "__rl": true,
+          "value": "7zEsrWJGc5p9fhcS",
+          "mode": "list",
+          "cachedResultName": "💭 CHAT IA | ATENDIMENTO INICIAL"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', `Será a questão enviada pelo o usuário`, 'string') }}",
+            "memory": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('memory', `Será a memoria do chadtdo usuário presente em \"Memória do Usuário (memory):\".`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "memory",
+              "displayName": "memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -272,
+        32
+      ],
+      "id": "e1de6c59-8a36-429c-8f56-69e2028f3033",
+      "name": "inicialService"
+    },
+    {
+      "parameters": {
+        "name": "rag",
+        "description": "### 2. CHAT IA | ESCLARECIMENTO DE DÚVIDAS (`rag`)\n**Função**: Fornecer informações sobre os produtos da loja e sobre aulas de surf\n\n**QUANDO USAR**:\n- Quando o usuário tem dúvidas sobre produtos da loja\n- Quando o usuário pergunta sobre produtos específicos\n- Quando o usuário precisa de informações sobre preços, duração ou tipo de produto\n- Quando o usuário questiona sobre equipamentos para aula de surf\n\n**QUANDO NÃO USAR**:\n- Esse chat não faz recomendações personalizadas baseadas no perfil do cliente\n- Esse chat não realiza agendamentos de aulas ou vendas de produtos\n- Esse chat não coleta informações detalhadas do cliente\n",
+        "workflowId": {
+          "__rl": true,
+          "value": "e0T0lEt4RjvJlrsL",
+          "mode": "list",
+          "cachedResultName": "💭 CHAT IA | RAG"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', `Será a questão enviada pelo o usuário`, 'string') }}",
+            "memory": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('memory', `Será a memoria do chadtdo usuário presente em \"Memória do Usuário (memory):\".`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "memory",
+              "displayName": "memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -416,
+        32
+      ],
+      "id": "cca813c5-6cf7-46fe-b5d1-1ca08f837b2c",
+      "name": "rag"
+    },
+    {
+      "parameters": {
+        "content": "## 🌐 MCP SERVER TRIGGER\n\nServidor central responsável por concentrar e organizar todas as nossas funções, incluindo lógica de negócios, agendamentos e integrações.\n",
+        "height": 316,
+        "width": 520,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -112,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "2da3b891-e22d-4de3-a286-cf67bd50f930",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 CHATS ESPECIALIZADOS\n\nAgentes IA especializados em responder o lead",
+        "height": 320,
+        "width": 656,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -800,
+        -128
+      ],
+      "id": "67e2617a-5e51-4949-a0d4-87bbdf61e526",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "name": "store",
+        "description": "### 4. CHAT IA | LOJA (`store`)\n**Função**: Auxiliar o usuário no **processo de vendas de itens da loja**, informando preço, detalhes do produto, quantidade do estoque.\n\n**QUANDO USAR**:\n  - Quando o usuário deseja **comprar algum produto da loja**\n  - Quando o usuário quer saber **sobre algum produto**\n  - Quando o usuário deseja **comprar algum produto**\n  - Quando o usuário solicita **informação de estoque de algum produto**\n  - Quando o usuário solicita **recomendação sobre algum produto**\n\n**QUANDO NÃO USAR**:\n- Este chat **não faz agendamento de aulas de surf**\n- Este chat **não tira dúvidas gerais ou sobre aulas de surf**",
+        "workflowId": {
+          "__rl": true,
+          "value": "dKcotiGvFfz3AT0F",
+          "mode": "list",
+          "cachedResultName": "💭 CHAT IA | LOJA"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', `Será a questão enviada pelo o usuário`, 'string') }}",
+            "memory": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('memory', `Será a memoria do chadtdo usuário presente em \"Memória do Usuário (memory):\".`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "memory",
+              "displayName": "memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -736,
+        32
+      ],
+      "id": "926b13c8-440a-482e-9de7-dff0134f6b0d",
+      "name": "store"
+    },
+    {
+      "parameters": {
+        "content": "## 🛠️🗓️ FERRAMENTAS ESPECÍFICAS DE AGENDAMENTOS\n\nFerramentas usadas pelos agentes ia de agendamentos ( schedulingAgent ) com funções específicas de ( Marcar, Desmarcar e Consultar Horários disponíveis )",
+        "height": 320,
+        "width": 688,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -128
+      ],
+      "id": "aaec5bd3-d2b3-4174-a0ec-10d5ada71f59",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "name": "checkAvailability",
+        "description": "### 1. CONSULTA DE HORÁRIOS DISPONÍVEIS (`checkAvailability`)\n**Função**: Verificar e apresentar opções de datas e horários disponíveis para aulas de surf\n\n**QUANDO USAR**:\n- Quando o usuário solicita verificar disponibilidade de horários\n- Quando o usuário pergunta sobre dias ou horários específicos\n- Quando o usuário deseja saber quando um horário específico está disponível\n- Quando o usuário menciona \"agenda\", \"disponibilidade\" ou termos relacionados\n\n**QUANDO NÃO USAR**:\n- Esse recurso não fornece informações detalhadas sobre as aulas\n- Esse recurso não processa o agendamento final\n- Esse recurso não cancela ou altera consultas existentes\n- Esse recurso não faz recomendações sobre qual equipamentos usar",
+        "workflowId": {
+          "__rl": true,
+          "value": "ziG62bXxAbRPOA1O",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | Scheduling"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "type": "getDates"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": true
+            },
+            {
+              "id": "memory",
+              "displayName": "memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        528,
+        48
+      ],
+      "id": "85774c5b-c632-447b-bd3d-bd3d395a2a46",
+      "name": "checkAvailability"
+    },
+    {
+      "parameters": {
+        "name": "cancelSchedule",
+        "description": "### 3. CANCELAMENTO OU REMARCAÇÃO (`cancelSchedule`)\n**Função**: Processar solicitações de alteração ou cancelamento de aulas existentes\n\n**QUANDO USAR**:\n- Quando o usuário solicita explicitamente cancelar uma aula\n- Quando o usuário solicita alterar a data ou horário de um agendamento\n- Quando o usuário menciona impossibilidade de comparecer em data agendada\n- Quando é necessário verificar políticas de cancelamento ou remarcação\n\n**QUANDO NÃO USAR**:\n- Esse recurso não cria novos agendamentos do zero\n- Esse recurso não consulta horários disponíveis sem contexto de remarcação\n- Esse recurso não fornece informações sobre aulas\n- Esse recurso não processa simultaneamente cancelamento e nova marcação",
+        "workflowId": {
+          "__rl": true,
+          "value": "ziG62bXxAbRPOA1O",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | Scheduling"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "memory": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('memory', `Será o identificador do chat do usuário presente em \"Identificador do usuário\".`, 'string') }}",
+            "type": "cancelAppointment"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": true
+            },
+            {
+              "id": "memory",
+              "displayName": "memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        944,
+        48
+      ],
+      "id": "1ebbbdb8-a5e4-4e17-8e0e-0d34a98e9b04",
+      "name": "cancelSchedule"
+    },
+    {
+      "parameters": {
+        "name": "scheduleAppointment",
+        "description": "### 2. MARCAÇÃO DE CONSULTA (`scheduleAppointment`)\n**Função**: Processar e confirmar novos agendamentos de aulas de surf\n\n**QUANDO USAR**:\n- Quando o usuário seleciona um horário específico dentre as opções apresentadas\n- Quando o usuário expressa intenção clara de agendar uma aula\n- Quando o usuário confirma seus dados pessoais para finalizar agendamento\n- Quando é necessário gerar um protocolo de confirmação para um novo agendamento\n\n**QUANDO NÃO USAR**:\n- Esse recurso não consulta horários disponíveis sem iniciar um agendamento\n- Esse recurso não processa alterações em aulas já marcadas\n- Esse recurso não realiza cancelamentos\n- Esse recurso não fornece orientações detalhadas sobre as aulas",
+        "workflowId": {
+          "__rl": true,
+          "value": "ziG62bXxAbRPOA1O",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | Scheduling"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "memory": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('memory', `Será a memoria do chadtdo usuário presente em \"Memória do Usuário (memory):\".`, 'string') }}",
+            "data": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('data', `Será um JSON no sequinte formato exemplar:\n\n{\n    \"name\": \"jhon Doe\",\n    \"number\": \"11999999999\",\n    \"email\": \"test@example.com\",\n    \"scheduling\": \"2025-08-29 10:00\"\n}`, 'string') }}",
+            "type": "scheduleAppointment"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "type",
+              "displayName": "type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "data",
+              "displayName": "data",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
+            },
+            {
+              "id": "memory",
+              "displayName": "memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        736,
+        48
+      ],
+      "id": "4da30268-cbee-4afa-8f64-3fad49835447",
+      "name": "scheduleAppointment"
+    },
+    {
+      "parameters": {
+        "content": "## 🛠️🤔 FERRAMENTAS ESPECÍFICAS PARA TIRAR DÚVIDAS\n\nFerramentas usadas pelos agentes ia de tirar dúvidas ( rag ) com funções específicas de ( FAQ, Termos e Serviço )",
+        "height": 320,
+        "width": 688,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        448,
+        224
+      ],
+      "id": "979e8606-806c-4abb-bf28-50e1ff8480a8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 🛠️🛒 FERRAMENTAS ESPECÍFICAS PARA LOJA\n\nFerramentas usadas pelos agentes ia de loja ( store ) com funções específicas de ( Produtos, Estoque, Entrega e Pagamentos )",
+        "height": 320,
+        "width": 688
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        448,
+        -480
+      ],
+      "id": "98084ce4-1620-4495-84f9-ebc0eefe052c",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "name": "products",
+        "description": "### 1. CONSULTA DE PRODUTOS DISPONÍVEIS E ESTOQUE(`products`)\n**Função**: Verificar e apresentar opções de produtos da loja online e física e seu estoque\n\n**QUANDO USAR**:\n- Quando o usuário solicita verificar disponibilidade de produtos\n- Quando o usuário solicita imagens dos produtos\n- Quando o usuário pergunta sobre estoque ou produtos específicos\n- Quando o usuário deseja saber se um produto específico está disponível\n- Quando o usuário menciona \"produto\", \"estoque\", \"disponibilidade\" ou termos relacionados\n\n**QUANDO NÃO USAR**:\n- Esse recurso não fornece informações sobre entregas\n- Esse recurso não processa o pagamento final\n- Esse recurso não cancela a venda de um produto\n- Esse recurso não processa devolução de produtos\n- Esse recurso não faz recomendações sobre produtos",
+        "workflowId": {
+          "__rl": true,
+          "value": "BW5JIYQjJ8AAxNMd",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | Store"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "service": "products",
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', `query do cliente referente aos produtos que ele esta querendo verificar.`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "local_destino",
+              "displayName": "local_destino",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        528,
+        -304
+      ],
+      "id": "f66517eb-d2d7-4d03-af60-dfff2890ba4f",
+      "name": "products"
+    },
+    {
+      "parameters": {
+        "name": "payment",
+        "description": "### 3. MÉTODO DE PAGAMENTO (`payment`)\n**Função**: Função de realizar o pagamento da compra do cliente\n\n**QUANDO USAR**:\n- Quando o usuário solicita verificar valor final da compra\n- Quando o usuário pergunta sobre método de pagamento\n- Quando o usuário deseja realizar o pagamento da compra\n\n**QUANDO NÃO USAR**:\n- Esse recurso não fornece informações sobre produtos ou estoque\n- Esse recurso não fornece informações sobre entregas\n- Esse recurso não cancela a venda de um produto\n- Esse recurso não processa devolução de produtos\n- Esse recurso não faz recomendações sobre produtos",
+        "workflowId": {
+          "__rl": true,
+          "value": "BW5JIYQjJ8AAxNMd",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | Store"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "service": "payment"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "local_destino",
+              "displayName": "local_destino",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        944,
+        -304
+      ],
+      "id": "bee72b04-d0bd-45c3-b0e4-e7caac217147",
+      "name": "payment"
+    },
+    {
+      "parameters": {
+        "name": "delivery",
+        "description": "### 2. CONSULTA DE VALORES DE ENTREGA(`delivery`)\n**Função**: Verificar e apresentar o valor do frete/entrega dos produtos\n\n**QUANDO USAR**:\n- Quando o usuário solicita verificar valor de entrega/frete\n- Quando o usuário pergunta sobre locais disponíveis para entrega\n- Quando o usuário menciona \"entrega\", \"frete\", ou termos relacionados\n\n**QUANDO NÃO USAR**:\n- Esse recurso não fornece informações sobre produtos ou estoque\n- Esse recurso não processa o pagamento final\n- Esse recurso não cancela a venda de um produto\n- Esse recurso não processa devolução de produtos\n- Esse recurso não faz recomendações sobre produtos",
+        "workflowId": {
+          "__rl": true,
+          "value": "BW5JIYQjJ8AAxNMd",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | Store"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "local_destino": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('local_destino', `CEP do destino da entrega do cliente\n\n# EXEMPLO:\n{\n  \"local_destino\": {\n    \"cep\": 60334128,\n    \"rua\": \"Tambaú\",\n    \"numero\": 223,\n    \"complemento\": \"Na esquina da rua.\"\n  }\n}`, 'string') }}",
+            "service": "delivery"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "service",
+              "displayName": "service",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query_keyword",
+              "displayName": "query_keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": true
+            },
+            {
+              "id": "local_destino",
+              "displayName": "local_destino",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "object",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        736,
+        -304
+      ],
+      "id": "d181690c-cc9d-4a52-b24d-157659071114",
+      "name": "delivery"
+    },
+    {
+      "parameters": {
+        "name": "schedulingAgent",
+        "description": "### 3. CHAT IA | AGENDAMENTOS DE AULAS DE SURF (`scheduling`)\n**Função**: Auxiliar o usuário no **processo de agendamento de aulas de surf**, informando opções de dias, horários e professores para marcação.\n\n**QUANDO USAR**:\n- Quando o usuário deseja **agendar uma aula de surf**\n- Quando o usuário pergunta sobre **disponibilidade de datas ou horários**\n- Quando o usuário solicita **informações para marcar uma aula de surf**\n- Quando o usuário quer saber **como realizar o agendamento**\n\n**QUANDO NÃO USAR**:\n- Este chat **não oferece orientações de produtos personalizadas**\n- Este chat **não realiza diagnósticos nem recomenda produtos**\n- Este chat **não responde dúvidas gerais sobre a loja ou produtos**\n- Este chat **não apresenta detalhes técnicos sobre os produtos**\n",
+        "workflowId": {
+          "__rl": true,
+          "value": "5oTF5l5Lbx8vWg9U",
+          "mode": "list",
+          "cachedResultName": "💭 CHAT IA | AGENDAMENTO"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', `Será a questão enviada pelo o usuário`, 'string') }}",
+            "memory": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('memory', `Será a memoria do chadtdo usuário presente em \"Memória do Usuário (memory):\".`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "memory",
+              "displayName": "memory",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        -576,
+        32
+      ],
+      "id": "c532c8c9-209d-4670-984b-8f71b8230183",
+      "name": "scheduling"
+    },
+    {
+      "parameters": {
+        "name": "register",
+        "description": "### 2. REGISTRANDO NOVAS FAQs (`register`)\n**Função**: Registra novas faqs sempre que o banco de dados não encrontrar nenhuma informação sobre a dúvida do usuário\n\n**QUANDO USAR**:\n- Quando o banco de dados não retorna uma resposta\n- Quando o banco de dados não encrontrar uma resposta para o cliente\n- Quando o banco de dados não retorna nada\n- Quando o banco de dados retorna a informação de não ter encontrado nada correspondente\n\n**QUANDO NÃO USAR**:\n- Esse recurso não realiza buscas no banco de dados\n- Esse recurso não fornece informações sobre a disponibilidade de horários.\n- Esse recurso não é usado para marcar, cancelar ou alterar agendamentos.\n- Esse recurso não deve ser usado para obter descrições detalhadas de serviços ou termos.\n- Esse recurso não fornece descrição ou explicação sobre produtos específicos\n- Esse recurso não processa solicitações de compras ou trocas.",
+        "workflowId": {
+          "__rl": true,
+          "value": "teYni0RhlCFzLRXB",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | RAG"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', `Questionamento do usuáio. Aquilo que o usuário esta perguntando ou querendo tirar dúvida.`, 'string') }}",
+            "function": "new"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "function",
+              "displayName": "function",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        400
+      ],
+      "id": "879feab5-7954-4ecd-9607-a99812c2a25c",
+      "name": "register"
+    },
+    {
+      "parameters": {
+        "name": "RAG",
+        "description": "### 1. PERGUNTAS FREQUENTES, TERMOS E SERVIÇOS (`RAG`)\n**Função**: Consultar um banco de dados de perguntas frequentes, termos e serviços para encontrar respostas para dúvidas comuns dos clientes. A ferramenta usa busca vetorial para entender o significado da pergunta e retornar a resposta mais relevante.\n\n**QUANDO USAR**:\n- Quando o usuário faz uma pergunta sobre informações gerais da empresa, como horários, equipamentos, localização ou políticas básicas.\n- Quando o usuário faz uma pergunta que pode ser respondida de forma objetiva, como \"Vocês fornecem equipamentos?\" ou \"Qual o horário de atendimento?\".\n- Quando a dúvida é direta e se encaixa em uma das categorias: loja física, loja online ou aulas de surf.\n- Quando o usuario requisita informação sobre os termos e serviços da empresa\n- Quando a dúvida do usuário envolvem com os termos ou serviços\n\n**QUANDO NÃO USAR**:\n- Esse recurso não fornece informações sobre a disponibilidade de horários.\n- Esse recurso não é usado para marcar, cancelar ou alterar agendamentos.\n- Esse recurso não fornece descrição ou explicação sobre produtos específicos\n- Esse recurso não processa solicitações de compras ou trocas.",
+        "workflowId": {
+          "__rl": true,
+          "value": "teYni0RhlCFzLRXB",
+          "mode": "list",
+          "cachedResultName": "🔧 Tools | RAG"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', `Questionamento do usuáio. Aquilo que o usuário esta perguntando ou querendo tirar dúvida.`, 'string') }}",
+            "function": "search"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "function",
+              "displayName": "function",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        400
+      ],
+      "id": "ea29ed64-d0f0-4769-8ef9-0aa6fa5a1360",
+      "name": "RAG"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "inicialService": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rag": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "store": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "checkAvailability": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "scheduleAppointment": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cancelSchedule": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "products": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "delivery": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "payment": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "scheduling": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "register": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG": {
+      "ai_tool": [
+        [
+          {
+            "node": "MCP Server Trigger",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1d146b98-9bb7-45cb-af69-04de62e87922",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "0nUONWVOX0Lp7Fgq",
+  "tags": [
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

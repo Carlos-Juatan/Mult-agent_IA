@@ -1,0 +1,331 @@
+{
+  "name": "💭 CHAT IA | RAG",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "memory"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        176,
+        336
+      ],
+      "id": "f02959d0-1184-4bf9-860c-52c9fd9ec12f",
+      "name": "start"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Questão do Usuário:\n{{ $json.query }}\n\nIdentificador do usuário:\n{{ $json.memory }}",
+        "options": {
+          "systemMessage": "=## PERFIL E FUNÇÃO PRINCIPAL\n\nVocê é um assistente de IA da empresa \"titan\". Sua principal função é ajudar clientes e potenciais clientes (leads) tirando dúvidas sobre nossa loja física, loja online e aulas de surf.\n\n## INSTRUÇÕES PARA RESPOSTAS\n\n**Instruções para Respostas:**\n- Seja direto e útil. Responda às perguntas com base nas informações fornecidas pelas ferramentas.\n- Mantenha um tom amigável e profissional.\n- Se a pergunta do usuário não puder ser respondida com as ferramentas disponíveis, use a ferramenta `register` e informe-o de forma educada que a questão foi encaminhada e será respondida assim que possível e sugira outras opções, como falar com um atendente humano.\n- Nunca invente informações. Se não souber, diga que não sabe.\n\n\n## FERRAMENTAS DISPONÍVEIS\n\nVocê tem acesso a ferramentas de busca de informações que fornecem dados sobre:\n- **Banco de Dados Vetorial** para buscas de dados \n- **Registrador de FAQs** para registrar novas FAQs\n\n## INSTRUÇÕES ESPECIAIS\n  **Registro de Novas FAQs**\n  - Se identificar que a busca no banco de dados vetorial não encontrou uma resposta para o cliente\n  - **AÇÃO OBRIGATÓRIA**: Usar a ferramenta `register` para registrar o novo FAQ e informar o cliente que a dúvida foi encaminhada para um especialista e será respondida assim que possível"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        720,
+        160
+      ],
+      "id": "0c5e522e-185c-4918-96c8-aaac491f08df",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "## 🎉 Preparação de Valores\n\nRecebe dados ( query e memory ) do servidor MCP ou do **chat teste**\n",
+        "height": 472,
+        "width": 588,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -64,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "c0e372e6-780b-4e98-9948-496a7019a160",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## ✨ Agente IA de Dúvidas\n\nChat de IA especializado em tirar as dúvidas do lead, perguntas frequentes (faq), termos e serviços",
+        "height": 468,
+        "width": 652,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        544,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "ec4d1ab5-2774-4260-b6da-6ae47b4db466",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -16,
+        144
+      ],
+      "id": "f6c8790c-dbb0-476e-a666-e332618fcd2c",
+      "name": "chat",
+      "webhookId": "99b87590-1476-4d6f-8203-6d41a458b553"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=\n  {\n    \"step_name\": \"Apresentação e Tira-Dúvidas\",\n    \"query\": {{ JSON.stringify( $json.chatInput) }},\n    \"memory\": \"test-n8n:{{ $json.sessionId }}\"\n  }\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        144
+      ],
+      "id": "55aee2f2-ae06-4989-8994-179c39a040ab",
+      "name": "test-values",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        592,
+        336
+      ],
+      "id": "6d5d1558-db94-4700-9151-62fd8acce425",
+      "name": "model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        368,
+        160
+      ],
+      "id": "95f65743-5c0a-4c11-8bb0-dbdf2d39ac5f",
+      "name": "merge"
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://workflows.codesefaz.local/mcp/test/sse",
+        "include": "selected",
+        "includeTools": [
+          "RAG",
+          "register"
+        ]
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        912,
+        336
+      ],
+      "id": "20f7a3b8-4061-46e4-89f4-3ae1de041057",
+      "name": "MCP_schedule"
+    },
+    {
+      "parameters": {
+        "content": "## 📋 Notas Para Melhoria\n\n 1. ",
+        "height": 468,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1216,
+        0
+      ],
+      "typeVersion": 1,
+      "id": "9fed8c0f-93f0-4911-bea1-daa11f433c03",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "### ---------> PARA TESTES <---------",
+        "height": 192,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        96
+      ],
+      "id": "eff09229-dea4-4bd3-9e1e-57722b5e7ac2",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('merge').item.json.memory }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        736,
+        336
+      ],
+      "id": "7d7b0b32-51b0-445c-9fed-0ed7d9fbe407",
+      "name": "memory",
+      "credentials": {
+        "postgres": {
+          "id": "i37IDn2SW1eeq9LE",
+          "name": "Supabase Chat Memory"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "start": [
+      {
+        "json": {
+          "query": "Como vcs funcionam?",
+          "memory": "accountId-1:inboxId-2:conversationId-4"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "chat": {
+      "main": [
+        [
+          {
+            "node": "test-values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test-values": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP_schedule": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d4118f14-61a6-4c84-b579-8accbd1611fd",
+  "meta": {
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "e0T0lEt4RjvJlrsL",
+  "tags": [
+    {
+      "createdAt": "2025-08-26T17:58:48.891Z",
+      "updatedAt": "2025-08-26T17:58:48.891Z",
+      "id": "DvVLP0DVbt1tT6um",
+      "name": "chat ia"
+    },
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}

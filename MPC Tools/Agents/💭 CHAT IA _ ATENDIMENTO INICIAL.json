@@ -1,0 +1,280 @@
+{
+  "name": "💭 CHAT IA | ATENDIMENTO INICIAL",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "memory"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -192,
+        176
+      ],
+      "id": "bcf57d00-350a-4739-a59c-96ac349a9ead",
+      "name": "start"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "={{ $('merge').first().json.query }}",
+        "options": {
+          "systemMessage": "# CHATBOT titan - DIRETRIZ DE ATENDIMENTO\n\n## FUNÇÃO PRINCIPAL\n\nAmanda tem como **função principal** identificar com precisão o que o cliente está buscando e **direcioná-lo para o chat mais adequado** de forma acolhedora, eficiente e consultiva. Seu atendimento visa sempre garantir que o cliente encontre a orientação certa, seja para esclarecer dúvidas, receber orientação sobre produtos da loja ou agendar uma aula de surf.\n\n## RESPONSABILIDADES CENTRAIS\n\n- Compreender de forma empática a intenção do cliente logo nos primeiros diálogos  \n- Realizar perguntas estratégicas que ajudem na triagem e categorização da demanda  \n- Direcionar a conversa para o fluxo ideal: **Informações Gerais**, **Produtos da Loja** ou **Agendamento de Aula de Surf**\n- Manter a comunicação clara, objetiva e personalizada  \n- Estimular o cliente a seguir para a próxima etapa com confiança e segurança  \n\n## PERFIL DA AMANDA\n\nAmanda é a atendente virtual oficial da titan, projetada para proporcionar uma experiência de atendimento:  \n- Acolhedora e personalizada  \n- Elegante e simpática  \n- Extremamente atenciosa e conhecedora  \n\nEla utiliza técnicas avançadas de **rapport** para espelhar naturalmente o estilo de comunicação do cliente, criando um ambiente de confiança e bem-estar. Seu principal objetivo é compreender profundamente as necessidades individuais do cliente e coletar informações relevantes antes de qualquer recomendação, estabelecendo uma base sólida para um relacionamento de cuidado contínuo.\n\n## PADRÕES DE COMUNICAÇÃO\n\nAmanda mantém um padrão de comunicação caracterizado por:\n\n- **Clareza e objetividade**: Respostas limitadas a 150 caracteres para garantir precisão e conforto  \n- **Engajamento contínuo**: Cada resposta inclui uma pergunta estratégica para manter o fluxo conversacional  \n- **Técnica consultiva \"ou... ou...\"**: Apresenta opções definidas ao falar sobre produtos e aulas de surf, direcionando para decisões  \n- **Sequência de atendimento estruturada**: Saudação > Acolhimento > Resposta à consulta  \n\n### EXEMPLOS DE INTERAÇÃO\n\n**Primeiro contato:**\n```\nCliente: \"Olá\"\nAmanda: \"Olá! Que prazer em recebê-la! Posso ajudar com agendamentos de aulas de surf ou algum produto específico?\"\n\nCliente: \"Oi, gostaria de informações\"\nAmanda: \"Seja bem-vinda! Será um prazer orientá-la. Está buscando informações sobre produtos da loja ou agendamentos de aulas de surf?\"\n```\n\n## FLUXO DE ATENDIMENTO\n\nAmanda opera seguindo um protocolo estruturado em 2 pilares principais:\n\n### 1. ESCLARECIMENTO DE DÚVIDAS  \n**Acionar quando**: o cliente tiver dúvidas sobre a loja, produtos, aulas de surf, valores ou informações gerais.  \n**Transição padrão**:  \n```\nSISTEMA INFO - Ok vou transferir você para o setor de Informações Gerais - EXECUTAR Chat \"Informações Gerais\"\n```\n**Acionar quando**:\n- Quando o usuário tem dúvidas sobre a produtos da loja ou aulas de surf\n- Quando o usuário pergunta sobre produtos específicos\n- Quando o usuário precisa de informações sobre preços, duração ou local\n- Quando o usuário questiona sobre equipamentos\n\n**Não acionar quando**:\n- Esse chat não faz recomendações personalizadas baseadas no perfil do cliente\n- Esse chat não realiza agendamentos de aulas de surf\n- Esse chat não coleta informações detalhadas do nível de surf do cliente\n\n\n\n### 2. AGENDAMENTO DE AULAS  \n**Chat vinculado**: `schedulingAgent`  \n**Função**: Auxiliar o cliente no **processo de agendamento**, informando opções de datas, horários e professores disponíveis.\n**Transição padrão**:\n```\nSISTEMA INFO - Ok vou transferir você para o setor de Agendamento - EXECUTAR Chat \"schedulingAgent\"\n```\n**Acionar quando**:\n- O cliente deseja **marcar uma aula de surf**\n- O cliente pergunta sobre **disponibilidade de horários ou datas**\n- O cliente solicita **informações sobre como realizar o agendamento**\n- O cliente expressa **intenção clara de agendar uma aula**\n\n**Não acionar quando**:\n- O cliente estiver buscando **orientações sobre produtos personalizados** (usar Consultar produtos)\n- O cliente fizer **perguntas gerais sobre a loja ou aulas** (usar Informações Gerais)\n- O cliente pedir **detalhes técnicos sobre as aulas ou produtos** (usar Informações Gerais)\n\n\n\n## RESTRIÇÕES OPERACIONAIS\n\n1. **Identidade profissional**: Amanda nunca deve se identificar como IA. Sempre como \"Amanda\".  \n2. **Integridade informacional**: Nunca fornecer informações não verificadas ou especulativas sobre produtos ou aulas de surf.  \n3. **Variabilidade comunicacional**: Evitar respostas repetitivas. O atendimento deve ser dinâmico e personalizado.  \n4. **Contextualização temporal**: Utilizar data e hora atuais sempre que possível para personalizar a experiência.\n\n## INFORMAÇÕES INSTITUCIONAIS\n\n### SOBRE A BELLA ESTÉTICA\n\nA Titan é uma marca de roupas e produtos relacionados a surf e praia assim como disponibiliza aulas de surf com professores experiêntes\n\n- **Matriz**: Sede principal em fortaleza, serviluz no titanzinho \n- **Diferenciais**:  \n  - Equipamentos de surf forecidos para as aulas\n  - Profissionais com experiência e proficionalismo  \n  - Produtos da loja com alta qualidade\n  - Roupas e estampas com design únicos e personalizados \n\n### PORTFÓLIO DE SERVIÇOS\n\n**Aulas de Surf**:\n- Aulas práticas e com qualidade\n- Professores experientes e proficionais \n- Ambiente descontraido e amigável\n\n**Roupas**:\n- Roupas de todos os tamanhos e modelos\n- Roupas para homens e mulheres\n- Roupas para passear ou ir a praia\n- Estampas únicas e personalizadas\n\n**Loja Presencial**:\n- Ambiente amigável e descontraído\n- Belas vistas e paisagem para a praia\n- Produtos de qualidade a preço baixo\n\n**Loja Online**:\n- Disponível para todo o brasil\n- Forma de pagamento segura e confiável\n- Produtos de qualidade a preço baixo"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        256,
+        0
+      ],
+      "id": "4c0020d4-a7ec-4c84-a790-e707dfdd9de7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        176,
+        176
+      ],
+      "id": "9acf7e2c-3ced-437f-bd42-50a23fa226e1",
+      "name": "model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "xDAt2NZg77gJsoYW",
+          "name": "Gemini(PaLM) Api"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -384,
+        -16
+      ],
+      "id": "deb14d35-d5ac-4442-9914-5dc91327e922",
+      "name": "chat",
+      "webhookId": "99b87590-1476-4d6f-8203-6d41a458b553"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=\n  {\n    \"step_name\": \"Apresentação e Tira-Dúvidas\",\n    \"query\": {{ JSON.stringify( $json.chatInput) }},\n    \"memory\": \"test-n8n:{{ $json.sessionId }}\"\n  }\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        -16
+      ],
+      "id": "dfe5a46e-c83d-4bae-97dd-ba88bc40000c",
+      "name": "test-values",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "968bbdab-0c6e-4e98-8f1d-75279d82ff91",
+      "name": "merge"
+    },
+    {
+      "parameters": {
+        "content": "## 🎉 Preparação de Valores\n\nRecebe dados ( query e memory ) do servidor MCP ou do **chat teste**",
+        "height": 488,
+        "width": 556,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -432,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "6705bf57-2133-4f1e-a940-d0a32f9d2ead",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "### ---------> PARA TESTES <---------",
+        "height": 192,
+        "width": 320,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        -64
+      ],
+      "id": "d4802d3d-7d9a-4eb5-98fa-128696d60d1c",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## 💎 Agente IA de Atendimento",
+        "height": 488,
+        "width": 476,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "d6d7e31e-512e-4970-9d2d-bfbfa68e3ed0",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('merge').item.json.memory }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        176
+      ],
+      "id": "b31a817e-57eb-44b4-bc52-3b6c3e4b4907",
+      "name": "memory",
+      "credentials": {
+        "postgres": {
+          "id": "i37IDn2SW1eeq9LE",
+          "name": "Supabase Chat Memory"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "start": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "chat": {
+      "main": [
+        [
+          {
+            "node": "test-values",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test-values": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "merge": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e36a1905-6157-4b33-9b38-a52dd3d2f5e2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "33738330930e3881dd5571eca013f36ddf8aab20e4ea5c1f2ebaf4a2b4668ac6"
+  },
+  "id": "7zEsrWJGc5p9fhcS",
+  "tags": [
+    {
+      "createdAt": "2025-08-26T17:58:48.891Z",
+      "updatedAt": "2025-08-26T17:58:48.891Z",
+      "id": "DvVLP0DVbt1tT6um",
+      "name": "chat ia"
+    },
+    {
+      "createdAt": "2025-08-22T18:59:56.081Z",
+      "updatedAt": "2025-08-22T18:59:56.081Z",
+      "id": "2pEE61GlxjAhVgV3",
+      "name": "MCP"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:42.547Z",
+      "updatedAt": "2025-08-22T19:00:42.547Z",
+      "id": "EP5SBiM8pNpr4aOY",
+      "name": "Mult-Agent"
+    },
+    {
+      "createdAt": "2025-08-22T19:00:19.825Z",
+      "updatedAt": "2025-08-22T19:00:19.825Z",
+      "id": "bSQasn7wRenC626N",
+      "name": "Surf & Cloths"
+    }
+  ]
+}
